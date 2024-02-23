@@ -1,8 +1,3 @@
-Final product: debian-12-unattended.iso
-Source: debian-12.5.0-amd64-netinst.iso
-Notes:
-* Hostname was not set
-
 # Generating custom iso
 
 I use this to generate my custom Debian iso that is later used in
