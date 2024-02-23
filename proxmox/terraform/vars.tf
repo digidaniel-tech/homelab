@@ -1,31 +1,35 @@
-variable "proxmox_host" {
+variable "TF_VAR_PRX_HOST" {
   type = string
 }
 
-variable "proxmox_url" {
+variable "TF_VAR_PRX_URL" {
   type = string
 }
 
-variable "proxmox_api_token_id" {
+variable "TF_VAR_PRX_API_ID" {
   type = string
 }
 
-variable "proxmox_api_token_secret" {
+variable "TF_VAR_PRX_API_SECRET" {
   type = string
 }
 
-variable "iso_name" {
+variable "TF_VAR_PRX_ISO_NAME" {
   type = string
+  default = "local:iso/debian-12-unattended.iso"
 }
 
-variable "storage_name" {
+variable "TF_VAR_PRX_STORAGE_NAME" {
   type = string
+  default = "SSD500"
 }
 
-variable "vm_name" {
+variable "TF_VAR_PRX_VM_NAME" {
   type = string
+  default = "debian"
 }
 
-variable "vm_tags" {
+variable "TF_VAR_PRX_VM_TAGS" {
   type = string
+  default = ""
 }
