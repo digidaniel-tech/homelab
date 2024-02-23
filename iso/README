@@ -1,0 +1,125 @@
+Final product: debian-12-unattended.iso
+Source: debian-12.5.0-amd64-netinst.iso
+Notes:
+* Hostname was not set
+
+# Generating custom iso
+
+I use this to generate my custom Debian iso that is later used in
+my automation scripts when creating vm's unattended.
+
+## How to create iso
+
+### Requirements
+To follow along this guide we need to following packages to be installed.
+- wget
+- xorriso
+- genisoimage
+
+### Step 1: Downloading existing iso
+
+First step is to download the base iso file that we will be modifying.
+
+In this example we will using Debian-12.5.0-amd64-netinst.iso to generate our
+own iso.
+
+This can be done using wget and running the command below.
+
+> wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.5.0-amd64-netinst.iso
+
+### Step 2: Extracting base iso
+
+I have made some tools to make this process easier that we will use, if you
+are curious on what each tool is doing then you can find all of them in the
+scripts folder.
+
+By running the script below we are extracting the base iso into a folder called
+isofiles, this folder will then later be used to preconfigure the installation
+process that will be run when using the iso file.
+
+> scripts/extractiso debian-12.5.0-amd64-netinst.iso
+
+Remember to change the argument to the iso that you are using.
+
+### Step 3: Editing the preseed.cfg
+
+Now when the iso is extracted we need to update the preseed.cfg with the
+settings we want the installer to use during the installation process, the 
+config file might look scary at a first glance but when you start reading the
+file is quite self explanatory.
+
+These are the most important configurations in my opinion but it is a good idea
+to look into the other configurations aswell.
+
+> **d-i debian-installer/language string** -- Sets the language that is installed
+> 
+> **d-i debian-installer/country string** -- Sets what country it machine runs in
+> 
+> **d-i debian-installer/locale string** -- Sets the locale of the machine
+>
+> **d-i keyboard-configuration/xkb-keymap select** -- Sets the key mapping
+>
+> **d-i netcfg/dhcp_timeout string** -- This is active due to my DHCP server being
+> slow when creating multiple machines at the same time.
+>
+> **d-i netcfg/get_hostname string** -- Sets the hostname of the machine
+> 
+> **d-i netcfg/get_domain string** -- What domain are we running in
+>
+> **d-i passwd/root-login boolean false** -- Skipping the root account creation, the
+> created user will be able to use sudo so we don't need root.
+>
+> **d-i passwd/user-fullname string** -- What is the full name if the user that is
+> created
+> 
+> **d-i passwd/username string** -- The username of the user that is created
+> 
+> **d-i passwd/user-password-crypted password** -- The encrypted password that is
+> used when creating the user, look at the bottom of the readme file to see how
+> to generate the crypted password.
+>
+> **d-i time/zone string** -- What timezone should be set
+
+The configuration I use is already set in the file so if you want to use the 
+same configuration I have you can jump this step.
+
+### Step 4: Use preseed.cfg to update initrd
+
+With an updated preseed file we can now update initrd with the changes.
+
+We are doing to by running the command below
+
+> scripts/usePreseed
+
+Now the initrd is updated with all changes that we have made in step 3.
+
+### Step 5: Generate ISO file
+
+Time for the last step, we have now set the configuration we want and updated
+initrd with it, so now it is time to generate the iso file that will be our
+final product to be using in future installations.
+
+We generate this iso file by running the script below, the input argument is
+what our iso file will be called.
+
+> scripts/generateiso debian-12-unattended.iso
+
+And there we have it, we have now successfully generated our own debian iso file
+that can be used to install Debian machines without any need of interactions.
+
+## How to generate crypted password
+
+When setting the password that should be used it is a good practice to set this
+as encrypted for better security. I will here show how this can be done.
+
+### Requirements
+
+To being able to run follow along this guide we need python3 installed.
+
+### Generate password
+
+By running the command below we are encrypting the set password and printing it
+out in the screen to be using in our preseed file. Remember to replace the
+password with what password you want to use.
+
+> python3 -c 'import crypt; print(crypt.crypt("\<password>", crypt.METHOD_SHA512))'

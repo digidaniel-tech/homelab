@@ -1,0 +1,23 @@
+#!/bin/sh
+
+DIRECTORY="isofiles"
+
+if [ ! -d "$DIRECTORY" ]; then
+  echo "Folder $DIRECTORY does not exist. Please run extractiso first and try again"
+  exit 1
+fi
+
+echo "- Setting write permissions to install.amd DIR"
+chmod +w -R $DIRECTORY/install.amd/
+
+echo "- Unzip initrd image"
+gunzip $DIRECTORY/install.amd/initrd.gz
+
+echo "- Adding preseed.cfg to initrd"
+echo preseed.cfg | cpio -H newc -o -A -F $DIRECTORY/install.amd/initrd 2> /dev/null
+
+echo "- Recreating the initrd image"
+gzip $DIRECTORY/install.amd/initrd
+
+echo "- Removes write permission to install.amd DIR."
+chmod -w -R $DIRECTORY/install.amd/

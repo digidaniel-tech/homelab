@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if ! hash xorriso 2>/dev/null; then
+  echo "This tool requires xorriso. Install it please, and then run this tool again."
+  exit 1
+fi
+
+if [ -z "$1" ]; then
+  echo "Source file need to be specified."
+  exit 1
+fi
+
+xorriso -osirrox on -indev $1  -extract / isofiles/
