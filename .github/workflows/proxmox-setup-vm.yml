@@ -24,6 +24,7 @@ on:
       vm-tags:
         description: Tags
         type: string
+        default: ''
         required: false
 
 defaults:
