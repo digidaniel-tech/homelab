@@ -1,0 +1,89 @@
+name: "Proxmox Setup VM"
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'proxmox/terraform/*.tf'
+
+  pull_request:
+    branches: 
+      - main
+    paths:
+      - 'proxmox/terraform/*.tf'
+
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: proxmox/terraform
+
+jobs:
+  terraform:
+    name: "test, plan, and apply terraform changes"
+
+    runs-on: "self-hosted"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Config Terraform plugin cache
+        run: |
+          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
+          mkdir --parents ~/.terraform.d/plugin-cache
+
+      - name: Cache Terraform
+        uses: actions/cache@v3
+        if: always()
+        with:
+          path: |
+            ~/.terraform.d/plugin-cache
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: |
+          terraform plan \
+            -no-color \
+            -input=false \
+            -var="PRX_URL=${{ secrets.PRX_URL }}" \
+            -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
+            -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
+            -var="PRX_HOST=${{ vars.PRX_HOST }}" \
+            -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
+            -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
+            -var="PRX_VM_NAME=${{ vars.PRX_VM_NAME }}"
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        if: github.event_name == 'push'
+        run: |
+          terraform apply \
+          -auto-approve \
+          -input=false \
+          -var="PRX_URL=${{ secrets.PRX_URL }}" \
+          -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
+          -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
+          -var="PRX_HOST=${{ vars.PRX_HOST }}" \
+          -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
+          -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
+          -var="PRX_VM_NAME=${{ vars.PRX_VM_NAME }}"
