@@ -50,7 +50,6 @@ jobs:
 
       - name: Cache Terraform
         uses: actions/cache@v3
-        if: always()
         with:
           path: |
             ~/.terraform.d/plugin-cache
