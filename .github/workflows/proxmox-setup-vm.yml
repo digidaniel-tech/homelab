@@ -78,8 +78,8 @@ jobs:
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
             -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
-            -var="PRX_VM_NAME=${{ vars.INPUT_VM-NAME }}" \
-            -var="PRX_VM_TAGS=${{ vars.INPUT_VM-TAGS }}"
+            -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
+            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
 
         continue-on-error: true
 
@@ -99,5 +99,5 @@ jobs:
           -var="PRX_HOST=${{ vars.PRX_HOST }}" \
           -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
           -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
-          -var="PRX_VM_NAME=${{ vars.INPUT_VM-NAME }}" \
-          -var="PRX_VM_TAGS=${{ vars.INPUT_VM-TAGS }}"
+          -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
+          -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
