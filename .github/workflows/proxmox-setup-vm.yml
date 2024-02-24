@@ -14,6 +14,17 @@ on:
       - 'proxmox/terraform/*.tf'
 
   workflow_dispatch:
+    inputs:
+      vm-name:
+        description: VM name
+        type: string
+        default: 'Debian'
+        required: true
+      
+      vm-tags:
+        description: Tags
+        type: string
+        required: false
 
 defaults:
   run:
@@ -67,7 +78,9 @@ jobs:
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
             -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
-            -var="PRX_VM_NAME=${{ vars.PRX_VM_NAME }}"
+            -var="PRX_VM_NAME=${{ vars.INPUT_VM-NAME }}" \
+            -var="PRX_VM_TAGS=${{ vars.INPUT_VM-TAGS }}"
+
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -86,4 +99,5 @@ jobs:
           -var="PRX_HOST=${{ vars.PRX_HOST }}" \
           -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
           -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
-          -var="PRX_VM_NAME=${{ vars.PRX_VM_NAME }}"
+          -var="PRX_VM_NAME=${{ vars.INPUT_VM-NAME }}" \
+          -var="PRX_VM_TAGS=${{ vars.INPUT_VM-TAGS }}"
