@@ -43,12 +43,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Config Terraform plugin cache
+        id: plugin-cache
         run: |
           echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
           mkdir --parents ~/.terraform.d/plugin-cache
 
       - name: Cache Terraform
-        uses: actions/cache@v3
+        id: cache
+        uses: actions/cache@v4
         with:
           path: |
             ~/.terraform.d/plugin-cache
@@ -64,6 +66,10 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+
+      - name: Terraform Refresh state
+        id: refresh
+        run: terraform refresh
 
       - name: Terraform Plan
         id: plan
@@ -84,10 +90,12 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Plan Status
+        id: status
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
       - name: Terraform Apply
+        id: apply
         if: github.event_name == 'pull_request'
         run: |
           terraform apply \
