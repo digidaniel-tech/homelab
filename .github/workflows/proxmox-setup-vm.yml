@@ -36,25 +36,17 @@ jobs:
 
     runs-on: "self-hosted"
     steps:
+      - name: Restore cached terraform lock
+        uses: actions/cache/restore@v4
+        with:
+          path: .
+          key: ${{ runner.os }}-proxmox-setup-vm
+
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-
-      - name: Config Terraform plugin cache
-        run: |
-          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
-          mkdir --parents ~/.terraform.d/plugin-cache
-
-      - name: Cache Terraform
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.terraform.d/plugin-cache
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
 
       - name: Terraform Init
         id: init
@@ -100,3 +92,9 @@ jobs:
           -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
           -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
           -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
+
+      - name: Save cached terraform lock
+        uses: actions/cache/save@v4
+        with:
+          path: .
+          key: ${{ runner.os }}-proxmox-setup-vm
