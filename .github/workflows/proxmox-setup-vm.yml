@@ -96,6 +96,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           terraform apply \
+          -refresh=true \
           -auto-approve \
           -input=false \
           -var="PRX_URL=${{ secrets.PRX_URL }}" \
