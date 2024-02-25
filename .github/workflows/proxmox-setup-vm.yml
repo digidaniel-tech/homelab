@@ -36,11 +36,14 @@ jobs:
 
     runs-on: "self-hosted"
     steps:
-      - name: Restore cached terraform lock
-        uses: actions/cache/restore@v4
+      - name: Cache terraform lock
+        uses: actions/cache@v4
         with:
-          path: .
-          key: ${{ runner.os }}-proxmox-setup-vm
+          path: |
+            .terraform.lock.hcl
+          key: ${{ runner.os }}-proxmox-setup-vm-${{ hashFiles('.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-proxmox-setup-vm-
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -92,9 +95,3 @@ jobs:
           -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
           -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
           -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
-
-      - name: Save cached terraform lock
-        uses: actions/cache/save@v4
-        with:
-          path: .
-          key: ${{ runner.os }}-proxmox-setup-vm
