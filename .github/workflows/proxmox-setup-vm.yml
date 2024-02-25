@@ -62,7 +62,13 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="endpoint=${{ secrets.MINIO_ENDPOINT }}" \
+            -backend-config="access_key=${{ secrets.MINIO_ACCESS_KEY }}" \
+            -backend-config="secret_key=${{ secrets.MINIO_SECRET_KEY }}" \
+            -backend-config="bucket=github_tfstates" \
+            -backend-config="key=prx_vm_setup/terraform.tfstate"
       
       - name: Terraform Validate
         id: validate
