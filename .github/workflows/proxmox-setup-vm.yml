@@ -67,15 +67,12 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      - name: Terraform Refresh state
-        id: refresh
-        run: terraform refresh
-
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: |
           terraform plan \
+            -refresh=true \
             -no-color \
             -input=false \
             -var="PRX_URL=${{ secrets.PRX_URL }}" \
