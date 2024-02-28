@@ -2,7 +2,7 @@ version: '3'
 
 services:
   traefik:
-    image: traefik:latest
+    image: traefik:v2.11.0
     container_name: traefik
     restart: unless-stopped
     security_opt:
@@ -38,6 +38,7 @@ services:
       - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=home.wollbro.se"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.home.wollbro.se"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.s3.home.wollbro.se"
       - "traefik.http.routers.traefik-secure.service=api@internal"
 
 networks:

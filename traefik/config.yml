@@ -51,7 +51,7 @@ http:
     s3:
       entryPoints:
         - "https"
-      rule: "Host(`*.s3.home.wollbro.se`) || Host(`s3.home.wollbro.se`)"
+      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.home.wollbro.se`) || Host(`s3.home.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
