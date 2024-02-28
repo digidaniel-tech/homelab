@@ -1,0 +1,120 @@
+name: "Proxmox Setup VM"
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'proxmox/terraform/*.tf'
+
+  pull_request:
+    branches: 
+      - main
+    paths:
+      - 'proxmox/terraform/*.tf'
+
+  workflow_dispatch:
+    inputs:
+      vm-name:
+        description: VM name
+        type: string
+        required: true
+      
+      vm-tags:
+        description: Tags
+        type: string
+        default: ''
+        required: false
+
+defaults:
+  run:
+    working-directory: proxmox/terraform
+
+jobs:
+  terraform:
+    name: "test, plan, and apply terraform changes"
+
+    runs-on: "self-hosted"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Config Terraform plugin cache
+        id: plugin-cache
+        run: |
+          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
+          mkdir --parents ~/.terraform.d/plugin-cache
+
+      - name: Cache Terraform
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.terraform.d/plugin-cache
+            ./.terraform.lock.hcl
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init \
+            -backend-config="endpoint=${{ secrets.MINIO_ENDPOINT }}" \
+            -backend-config="region=eu-north-1" \
+            -backend-config="access_key=${{ secrets.MINIO_ACCESS_KEY }}" \
+            -backend-config="secret_key=${{ secrets.MINIO_SECRET_KEY }}" \
+            -backend-config="bucket=github-tfstates" \
+            -backend-config="key=prx_vm_setup/terraform.tfstate" \
+            -backend-config="skip_credentials_validation=true" \
+            -backend-config="skip_requesting_account_id=true" \
+            -backend-config="skip_s3_checksum=true" \
+            -backend-config="skip_region_validation=true" \
+            -backend-config="skip_metadata_api_check=true" \
+            -backend-config="use_path_style=true"
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: |
+          terraform plan \
+            -refresh=true \
+            -no-color \
+            -input=false \
+            -var="PRX_URL=${{ secrets.PRX_URL }}" \
+            -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
+            -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
+            -var="PRX_HOST=${{ vars.PRX_HOST }}" \
+            -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
+            -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
+            -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
+            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        id: status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        id: apply
+        if: github.event_name == 'pull_request'
+        run: |
+          terraform apply
+            -auto-approve \
+            -input=false \
+            -var="PRX_URL=${{ secrets.PRX_URL }}" \
+            -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
+            -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
+            -var="PRX_HOST=${{ vars.PRX_HOST }}" \
+            -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
+            -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
+            -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
+            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"

@@ -1,0 +1,8 @@
+PRX_URL="https://thor.home.wollbro.se:8006/api2/json"
+PRX_API_ID="github-runner@pam!gitlab_runner_token_test"
+PRX_API_SECRET="d971c7bd-f2e4-49f8-b65c-1841cb23b324"
+PRX_HOST="thor"
+PRX_ISO_NAME="local:iso/debian-12-unattended.iso"
+PRX_STORAGE_NAME="SSD500"
+PRX_VM_NAME="debian"
+PRX_VM_TAGS=""
