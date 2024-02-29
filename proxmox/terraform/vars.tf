@@ -24,6 +24,11 @@ variable "PRX_STORAGE_NAME" {
   default = "SSD500"
 }
 
+variable "PRX_VM_COUNT" {
+  type = number
+  default = 0
+}
+
 variable "PRX_VM_NAME" {
   type = string
   default = "debian"

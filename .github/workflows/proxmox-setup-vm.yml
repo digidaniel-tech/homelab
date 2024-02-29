@@ -15,6 +15,12 @@ on:
 
   workflow_dispatch:
     inputs:
+      vm-count:
+        description: Number of Instances
+        type: number
+        default: 0
+        required: true
+        
       vm-name:
         description: VM name
         type: string
@@ -94,6 +100,7 @@ jobs:
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
             -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
+            -var="PRX_VM_COUNT=${{ inputs.vm-count || 0 }}" \
             -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
         continue-on-error: true
@@ -116,5 +123,6 @@ jobs:
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
             -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
+            -var="PRX_VM_COUNT=${{ inputs.vm-count || 0 }}" \
             -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"

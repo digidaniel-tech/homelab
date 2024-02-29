@@ -1,6 +1,6 @@
 resource "proxmox_vm_qemu" "proxmox_vm_resource" {
   # just want 1 for now, set to 0 and apply to destroy VM
-  count = 1
+  count = var.PRX_VM_COUNT
 
   name = "${var.PRX_VM_NAME}-${count.index + 1}"
   desc = "Generated vm by terraform"
