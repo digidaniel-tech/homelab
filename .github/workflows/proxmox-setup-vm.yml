@@ -30,6 +30,9 @@ defaults:
   run:
     working-directory: proxmox/terraform
 
+env:
+  TF_LOG: "DEBUG"
+
 jobs:
   terraform:
     name: "test, plan, and apply terraform changes"
@@ -42,40 +45,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Config Terraform plugin cache
-        id: plugin-cache
-        run: |
-          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
-          mkdir --parents ~/.terraform.d/plugin-cache
-
-      - name: Cache Terraform
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.terraform.d/plugin-cache
-            ./.terraform.lock.hcl
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
-
       - name: Terraform Init
         id: init
         run: |
           terraform init
-          # terraform init \
-            # -backend-config="endpoint=${{ secrets.MINIO_ENDPOINT }}" \
-            # -backend-config="region=eu-north-1" \
-            # -backend-config="access_key=${{ secrets.MINIO_ACCESS_KEY }}" \
-            # -backend-config="secret_key=${{ secrets.MINIO_SECRET_KEY }}" \
-            # -backend-config="bucket=github-tfstates" \
-            # -backend-config="key=prx_vm_setup/terraform.tfstate" \
-            # -backend-config="skip_credentials_validation=true" \
-            # -backend-config="skip_requesting_account_id=true" \
-            # -backend-config="skip_s3_checksum=true" \
-            # -backend-config="skip_region_validation=true" \
-            # -backend-config="skip_metadata_api_check=true" \
-            # -backend-config="use_path_style=true"
       
       - name: Terraform Validate
         id: validate
