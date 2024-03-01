@@ -26,6 +26,8 @@ chmod a-w isolinux/isolinux.cfg
 echo "- Creates ISO"
 cd ..
 chmod a+w $DIRECTORY/isolinux/isolinux.bin
-genisoimage -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o $1 $DIRECTORY 2> /dev/null
+genisoimage -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat \
+  -no-emul-boot -boot-load-size 4 -boot-info-table \
+  -o $1 $DIRECTORY 2> /dev/null
 
 echo "- ISO file successfully created"
