@@ -60,7 +60,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
     connection {
       type        = "ssh"
       user        = "daniel"
-      private_key = file(var.ssh_private_key_path)
+      password    = "${ var.ssh_default_password }"
       host        = self.default_ipv4_address
       timeout     = "2m"
     }
