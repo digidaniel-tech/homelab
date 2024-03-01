@@ -20,7 +20,13 @@ on:
         type: number
         default: 0
         required: true
-        
+      
+      vm-id:
+          description: VM id (Set this to 0 if it should use next available id)
+          type: number
+          default: 0
+          required: false
+
       vm-name:
         description: VM name
         type: string
@@ -74,7 +80,7 @@ jobs:
             -backend-config="access_key=${{ secrets.MINIO_ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.MINIO_SECRET_KEY }}" \
             -backend-config="bucket=github-tfstates" \
-            -backend-config="key=prx_vm_setup/terraform.tfstate" \
+            -backend-config="key=prx_vm_setup/${{inputs.vm-name}}-${{inputs.vm-id}}.tfstate" \
             -backend-config="skip_credentials_validation=true" \
             -backend-config="skip_requesting_account_id=true" \
             -backend-config="skip_s3_checksum=true" \
@@ -102,7 +108,8 @@ jobs:
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
             -var="PRX_VM_COUNT=${{ inputs.vm-count || 0 }}" \
             -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
-            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
+            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
+            -var="PRX_VM_ID=${{ inputs.vm-id }}"
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -115,6 +122,7 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           terraform apply \
+            -refresh=true \
             -auto-approve \
             -input=false \
             -var="PRX_URL=${{ secrets.PRX_URL }}" \
@@ -125,4 +133,5 @@ jobs:
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
             -var="PRX_VM_COUNT=${{ inputs.vm-count || 0 }}" \
             -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
-            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}"
+            -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
+            -var="PRX_VM_ID=${{ inputs.vm-id }}"

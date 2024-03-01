@@ -29,6 +29,11 @@ variable "PRX_VM_COUNT" {
   default = 0
 }
 
+variable "PRX_VM_ID" {
+  type = number
+  default = 0
+}
+
 variable "PRX_VM_NAME" {
   type = string
   default = "debian"
