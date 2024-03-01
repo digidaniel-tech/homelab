@@ -6,7 +6,7 @@ on:
       vm-count:
         description: Number of Instances
         type: number
-        default: 0
+        default: 1
         required: true
       
       vm-id:
@@ -17,6 +17,7 @@ on:
 
       vm-name:
         description: VM name
+        default: 'Debian'
         type: string
         required: true
       
@@ -82,7 +83,6 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
         run: |
           terraform plan \
             -refresh=true \
@@ -94,8 +94,8 @@ jobs:
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
             -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
-            -var="PRX_VM_COUNT=${{ inputs.vm-count || 0 }}" \
-            -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
+            -var="PRX_VM_COUNT=${{ inputs.vm-count }}" \
+            -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
             -var="PRX_VM_ID=${{ inputs.vm-id }}"
         continue-on-error: true
@@ -107,7 +107,6 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           terraform apply \
             -refresh=true \
@@ -119,7 +118,7 @@ jobs:
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
             -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
-            -var="PRX_VM_COUNT=${{ inputs.vm-count || 0 }}" \
-            -var="PRX_VM_NAME=${{ inputs.vm-name || 'debian' }}" \
+            -var="PRX_VM_COUNT=${{ inputs.vm-count }}" \
+            -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
             -var="PRX_VM_ID=${{ inputs.vm-id }}"
