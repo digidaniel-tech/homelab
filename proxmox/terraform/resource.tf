@@ -25,8 +25,6 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
   bootdisk = "scsi0"
   scsihw = "virtio-scsi-pci"
 
-  ssh_private_key = var.ssh_private_key_path
-
   disks {
     scsi {
       scsi0 {
@@ -58,5 +56,13 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
       "chmod 700 ~/.ssh",
       "chmod 600 ~/.ssh/authorized_keys"
     ]
+
+    connection {
+      type        = "ssh"
+      user        = "daniel"  # Or the appropriate username for your instance
+      private_key = var.ssh_private_key_path  # Path to your private key
+      host        = self.public_ip  # Use 'self.public_ip' for the public IP of the instance
+      timeout     = "2m"  # Adjust timeout as needed
+    }
   }
 }
