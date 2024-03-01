@@ -1,0 +1,70 @@
+---
+- name: Setup GitHub Actions Runner
+  hosts: targets
+  become: true
+
+  vars:
+    github_runner_version: '2.284.1'
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+
+  tasks:
+    - name: Install dependencies
+      become: true
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - curl
+        - jq
+
+    - name: Create directory for runner
+      become: true
+      ansible.builtin.file:
+        path: /opt/github-runner
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Download GitHub Actions Runner
+      become: true
+      ansible.builtin.get_url:
+        url: "https://github.com/actions/runner/releases/download/v{{ github_runner_version }}/actions-runner-linux-x64-{{ github_runner_version }}.tar.gz"
+        dest: /opt/github-runner/actions-runner.tar.gz
+        mode: '0644'
+
+    - name: Extract GitHub Actions Runner
+      become: true
+      ansible.builtin.unarchive:
+        src: /opt/github-runner/actions-runner.tar.gz
+        dest: /opt/github-runner
+        remote_src: true
+
+    - name: Configure GitHub Actions Runner
+      become: true
+      ansible.builtin.shell: |
+        ./config.sh --url https://github.com/{{ org_name }}/{{ repo_name }} \
+                   --token {{ access_token }} \
+                   --name {{ runner_name }} \
+                   --labels {{ runner_labels }}
+      register: config_output
+      changed_when: config_output != 0
+      args:
+        chdir: /opt/github-runner
+
+    - name: Install GitHub Actions Runner as a Service
+      become: true
+      ansible.builtin.copy:
+        src: /opt/github-runner/svc.sh
+        dest: /etc/systemd/system/github-runner.service
+        mode: '0755'
+      notify:
+        - Restart github-runner
+
+  handlers:
+    - name: Restart github-runner
+      become: true
+      ansible.builtin.systemd:
+        name: github-runner
+        state: restarted
