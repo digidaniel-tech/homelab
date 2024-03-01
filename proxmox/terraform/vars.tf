@@ -48,6 +48,6 @@ variable "ssh_default_password" {
   type = string
 }
 
-variable "ssh_private_key_path" {
-  description = "Path to the SSH private key"
+variable "ssh_pub_key" {
+  type = string
 }

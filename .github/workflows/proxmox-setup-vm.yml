@@ -107,6 +107,7 @@ jobs:
             -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
             -var="PRX_VM_ID=${{ inputs.vm-id }}" \
+            -var="ssh_pub_key=${{secrets.RUNNER_SSH_PUB_KEY}}" \
             -var="ssh_default_password=${{secrets.SSH_DEFAULT_PASSWORD}}"
         continue-on-error: true
 
@@ -132,4 +133,5 @@ jobs:
             -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
             -var="PRX_VM_ID=${{ inputs.vm-id }}" \
+            -var="ssh_pub_key=${{secrets.RUNNER_SSH_PUB_KEY}}" \
             -var="ssh_default_password=${{secrets.SSH_DEFAULT_PASSWORD}}"
