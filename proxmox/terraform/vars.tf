@@ -24,26 +24,6 @@ variable "PRX_STORAGE_NAME" {
   default = "SSD500"
 }
 
-variable "PRX_VM_COUNT" {
-  type = number
-  default = 0
-}
-
-variable "PRX_VM_ID" {
-  type = number
-  default = 0
-}
-
-variable "PRX_VM_NAME" {
-  type = string
-  default = "debian"
-}
-
-variable "PRX_VM_TAGS" {
-  type = string
-  default = ""
-}
-
 variable "ssh_default_password" {
   type = string
 }
