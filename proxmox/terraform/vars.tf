@@ -43,3 +43,7 @@ variable "PRX_VM_TAGS" {
   type = string
   default = ""
 }
+
+variable "ssh_private_key_path" {
+  description = "Path to the SSH private key"
+}

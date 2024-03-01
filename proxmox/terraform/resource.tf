@@ -25,6 +25,8 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
   bootdisk = "scsi0"
   scsihw = "virtio-scsi-pci"
 
+  ssh_private_key = var.VM_SSH_PRIVATE_KEY
+
   disks {
     scsi {
       scsi0 {
@@ -46,6 +48,15 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
       disk,
       vm_state,
       network,
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p ~/.ssh",
+      "cat ${var.ssh_private_key_path} >> ~/.ssh/authorized_keys",
+      "chmod 700 ~/.ssh",
+      "chmod 600 ~/.ssh/authorized_keys"
     ]
   }
 }

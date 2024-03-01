@@ -43,6 +43,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      - name: Extract SSH private key
+        run: echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+
       - name: Config Terraform plugin cache
         id: plugin-cache
         run: |
@@ -89,6 +92,7 @@ jobs:
             -no-color \
             -input=false \
             -var="PRX_URL=${{ secrets.PRX_URL }}" \
+            -var="PRX_URL=${{ secrets.PRX_URL }}" \
             -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
             -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
@@ -122,3 +126,5 @@ jobs:
             -var="PRX_VM_NAME=${{ inputs.vm-name }}" \
             -var="PRX_VM_TAGS=${{ inputs.vm-tags }}" \
             -var="PRX_VM_ID=${{ inputs.vm-id }}"
+        env:
+          TF_VAR_ssh_private_key_path: ~/.ssh/id_rsa
