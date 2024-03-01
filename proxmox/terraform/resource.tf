@@ -59,10 +59,10 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
 
     connection {
       type        = "ssh"
-      user        = "daniel"  # Or the appropriate username for your instance
-      private_key = var.ssh_private_key_path  # Path to your private key
-      host        = self.public_ip  # Use 'self.public_ip' for the public IP of the instance
-      timeout     = "2m"  # Adjust timeout as needed
+      user        = "daniel"
+      private_key = file(var.ssh_private_key_path)
+      host        = proxmox_vm_qemu.example_vm.target_node
+      timeout     = "2m"
     }
   }
 }
