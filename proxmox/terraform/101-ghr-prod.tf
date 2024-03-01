@@ -1,28 +1,24 @@
-resource "proxmox_vm_qemu" "proxmox_vm_resource" {
-  # This is to make it possible to update existing VM's
-  vmid = var.PRX_VM_ID
-  count = var.PRX_VM_COUNT
+resource "proxmox_vm_qemu" "github_resource" {
+  count = 1
 
-  name = "${var.PRX_VM_NAME}-${count.index + 1}"
-  desc = "Generated vm by terraform"
+  name = "github-runner"
+  desc = "Responsible to run github workflows locally"
   agent = 1
-  tags = var.PRX_VM_TAGS
+  tags = "github"
 
-  qemu_os = "l26"  # default other
-  iso = var.PRX_ISO_NAME
+  qemu_os = "l26"
+  iso = "local:iso/debian-12-unattended.iso"
   target_node = var.PRX_HOST
 
   full_clone = false
 
-  # -- boot process
   onboot = true
-  automatic_reboot = false  # refuse auto-reboot when changing a setting
+  automatic_reboot = false
 
   sockets = 1
   cores = 2
   memory = 2048
 
-  bootdisk = "scsi0"
   scsihw = "virtio-scsi-pci"
 
   disks {

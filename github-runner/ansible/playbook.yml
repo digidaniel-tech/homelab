@@ -18,6 +18,7 @@
         - git
         - curl
         - jq
+        - unzip
 
     - name: Create directory for runner
       become: true
