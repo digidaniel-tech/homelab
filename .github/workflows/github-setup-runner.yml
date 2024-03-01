@@ -29,6 +29,7 @@ jobs:
   create-runner:
     name: "Creates runner using ansible playbook"
     runs-on: "self-hosted"
+    container: ubuntu:latest
 
     steps:
       - name: Checkout code
