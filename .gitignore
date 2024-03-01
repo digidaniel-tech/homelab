@@ -1,3 +1,5 @@
+.vscode
+
 iso/**/*.iso
 iso/isofiles
 
