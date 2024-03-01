@@ -18,6 +18,11 @@ chmod a+w md5sum.txt
 md5sum `find -follow -type f` > md5sum.txt
 chmod a-w md5sum.txt
 
+echo "- Edits isolinux.cfg to prevent installation menu (need sudo access)"
+chmod a+w isolinux/isolinux.cfg
+sudo sed -i '/default vesamenu.c32/d' isolinux/isolinux.cfg
+chmod a-w isolinux/isolinux.cfg
+
 echo "- Creates ISO"
 cd ..
 chmod a+w $DIRECTORY/isolinux/isolinux.bin
