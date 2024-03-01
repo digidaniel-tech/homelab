@@ -61,7 +61,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
       type        = "ssh"
       user        = "daniel"
       private_key = file(var.ssh_private_key_path)
-      host        = proxmox_vm_qemu.example_vm.target_node
+      host        = var.PRX_HOST
       timeout     = "2m"
     }
   }
