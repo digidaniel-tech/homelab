@@ -1,18 +1,6 @@
 name: "Proxmox Setup VM"
 
 on:
-  push:
-    branches: 
-      - main
-    paths:
-      - 'proxmox/terraform/*.tf'
-
-  pull_request:
-    branches: 
-      - main
-    paths:
-      - 'proxmox/terraform/*.tf'
-
   workflow_dispatch:
     inputs:
       vm-count:
