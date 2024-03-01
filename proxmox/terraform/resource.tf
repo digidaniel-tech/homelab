@@ -25,7 +25,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
   bootdisk = "scsi0"
   scsihw = "virtio-scsi-pci"
 
-  ssh_private_key = var.VM_SSH_PRIVATE_KEY
+  ssh_private_key = var.ssh_private_key_path
 
   disks {
     scsi {
