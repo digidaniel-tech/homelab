@@ -1,11 +1,11 @@
 ---
 - name: Setup GitHub Actions Runner
   hosts: targets
-  become: true
+  gather_facts: false
+  remote_user: daniel
 
   vars:
-    github_runner_version: '2.284.1'
-    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    github_runner_version: '2.313.0'
 
   tasks:
     - name: Install dependencies
@@ -13,6 +13,7 @@
       ansible.builtin.apt:
         name: "{{ item }}"
         state: present
+        update_cache: true
       loop:
         - git
         - curl
@@ -42,12 +43,13 @@
         remote_src: true
 
     - name: Configure GitHub Actions Runner
-      become: true
       ansible.builtin.shell: |
-        ./config.sh --url https://github.com/{{ org_name }}/{{ repo_name }} \
-                   --token {{ access_token }} \
-                   --name {{ runner_name }} \
-                   --labels {{ runner_labels }}
+        ./config.sh --url {{ github_repository_url }} \
+                   --token {{ github_token }} \
+                   --name {{ runner_name | default('runner') }} \
+                   --runnergroup {{ runner_group | default('default') }} \
+                   --labels {{ runner_labels | default('self-hosted') }} \
+                   --unattended
       register: config_output
       changed_when: config_output != 0
       args:
@@ -55,16 +57,39 @@
 
     - name: Install GitHub Actions Runner as a Service
       become: true
-      ansible.builtin.copy:
-        src: /opt/github-runner/svc.sh
-        dest: /etc/systemd/system/github-runner.service
-        mode: '0755'
-      notify:
-        - Restart github-runner
+      ansible.builtin.shell: |
+        ./svc.sh install
+      register: service_installed_output
+      changed_when: service_installed_output != 0
+      args:
+        chdir: /opt/github-runner
 
-  handlers:
-    - name: Restart github-runner
+    - name: Start GitHub Actions Runner Service
       become: true
-      ansible.builtin.systemd:
-        name: github-runner
-        state: restarted
+      ansible.builtin.shell: |
+        ./svc.sh start
+      register: service_started_output
+      changed_when: service_started_output != 0
+      args:
+        chdir: /opt/github-runner
+
+  vars_prompt:
+    - name: github_repository_url
+      prompt: "GitHub Repository URL (e.g., https://github.com/yourusername/yourrepository)"
+      private: false
+
+    - name: github_token
+      prompt: "GitHub Token with Repo scope"
+      private: true
+
+    - name: runner_name
+      prompt: "Runner Name (default: runner)"
+      private: false
+
+    - name: runner_group
+      prompt: "Runner Group (default: default)"
+      private: false
+
+    - name: runner_labels
+      prompt: "Runner Labels (comma-separated, default: self-hosted)"
+      private: false
