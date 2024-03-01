@@ -78,7 +78,6 @@ jobs:
             -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
             -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
-            -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
             -var="ssh_pub_key=${{secrets.RUNNER_SSH_PUB_KEY}}" \
             -var="ssh_default_password=${{secrets.SSH_DEFAULT_PASSWORD}}"
@@ -100,7 +99,6 @@ jobs:
             -var="PRX_API_ID=${{ secrets.PRX_API_TOKEN }}" \
             -var="PRX_API_SECRET=${{ secrets.PRX_API_SECRET }}" \
             -var="PRX_HOST=${{ vars.PRX_HOST }}" \
-            -var="PRX_ISO_NAME=${{ vars.PRX_ISO_NAME }}" \
             -var="PRX_STORAGE_NAME=${{ vars.PRX_STORAGE_NAME }}" \
             -var="ssh_pub_key=${{secrets.RUNNER_SSH_PUB_KEY}}" \
             -var="ssh_default_password=${{secrets.SSH_DEFAULT_PASSWORD}}"
