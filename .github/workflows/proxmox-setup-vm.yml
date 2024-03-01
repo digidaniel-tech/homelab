@@ -31,9 +31,6 @@ defaults:
   run:
     working-directory: proxmox/terraform
 
-env:
-  TF_VAR_ssh_private_key_path: ~/.ssh/id_rsa
-
 jobs:
   terraform:
     name: "test, plan, and apply terraform changes"
@@ -45,12 +42,6 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-
-      - name: Makes sure .ssh folder exists
-        run: mkdir -p ~/.ssh
-
-      - name: Extract SSH private key
-        run: echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 
       - name: Config Terraform plugin cache
         id: plugin-cache
