@@ -14,11 +14,6 @@ variable "PRX_API_SECRET" {
   type = string
 }
 
-variable "PRX_ISO_NAME" {
-  type = string
-  default = "local:iso/debian-12-unattended.iso"
-}
-
 variable "PRX_STORAGE_NAME" {
   type = string
   default = "SSD500"

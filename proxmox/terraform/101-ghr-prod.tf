@@ -7,7 +7,7 @@ resource "proxmox_vm_qemu" "github_resource" {
   tags = "github"
 
   qemu_os = "l26"
-  iso = var.PRX_ISO_NAME
+  iso = "local:iso/debian-12-unattended.iso"
   target_node = var.PRX_HOST
 
   full_clone = false
