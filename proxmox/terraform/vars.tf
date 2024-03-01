@@ -43,3 +43,11 @@ variable "PRX_VM_TAGS" {
   type = string
   default = ""
 }
+
+variable "ssh_default_password" {
+  type = string
+}
+
+variable "ssh_pub_key" {
+  type = string
+}

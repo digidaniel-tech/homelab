@@ -48,4 +48,21 @@ resource "proxmox_vm_qemu" "proxmox_vm_resource" {
       network,
     ]
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p ~/.ssh",
+      "echo ${var.ssh_pub_key} >> ~/.ssh/authorized_keys",
+      "chmod 700 ~/.ssh",
+      "chmod 600 ~/.ssh/authorized_keys"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "daniel"
+      password    = "${ var.ssh_default_password }"
+      host        = self.default_ipv4_address
+      timeout     = "2m"
+    }
+  }
 }
