@@ -22,7 +22,6 @@ resource "proxmox_vm_qemu" "_100_nas_prod_resource" {
   cores = 2
   memory = 6144
 
-  bootdisk = "scsi0"
   scsihw = "virtio-scsi-single"
 
   efidisk {
