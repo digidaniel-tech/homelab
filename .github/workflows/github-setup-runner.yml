@@ -12,13 +12,13 @@ on:
       runner-labels:
         description: Labels for runner
         type: string
-        default: 'My runner'
+        default: 'self-hosted,Linux,X64'
         required: true
 
       inventory:
-        description: Target ip-addresses
+        description: Target hosts
         type: string
-        default: ''
+        default: '{host}.home.wollbro.se'
         required: true
 
 defaults:
@@ -36,8 +36,8 @@ jobs:
 
       - name: Install Ansible
         run: |
-          sudo apt update && \
-          sudo apt install ansible -y
+          apt update && \
+          apt install ansible -y
 
       - name: Create SSH key file
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
