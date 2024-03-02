@@ -1,4 +1,4 @@
-resource "proxmox_vm_qemu" "github_resource" {
+resource "proxmox_vm_qemu" "_101_ghr_prod_resource" {
   count = 1
 
   name = "github-runner"

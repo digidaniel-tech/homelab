@@ -9,5 +9,6 @@ iso/isofiles
 **/terraform.tfstate
 **/terraform.tfstate.backup
 **/*.auto.tfvars
+**/tfplan
 
 **/.env

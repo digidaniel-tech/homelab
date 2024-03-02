@@ -1,15 +1,15 @@
-resource "proxmox_vm_qemu" "_100_nas_prod_resource" {
+resource "proxmox_vm_qemu" "_105_dkr_prod_resource" {
   count = 1
-
-  name = "Truenas"
-  desc = "Handles network storage"
+  
+  name = "Docker"
+  desc = "Docker instance to run containers from"
   agent = 1
-  tags = "nas"
-  bios = "ovmf"
-  machine = "q35"
+  tags = "docker"
+  bios = "seabios"
+  machine = "pc"
 
   qemu_os = "l26"
-  iso = "local:iso/TrueNAS-SCALE-23.10.1.3.iso"
+  iso = "local:iso/debian-12-unattended.iso"
   target_node = var.PRX_HOST
 
   full_clone = false
@@ -19,21 +19,16 @@ resource "proxmox_vm_qemu" "_100_nas_prod_resource" {
 
   sockets = 1
   cores = 2
-  memory = 6144
+  memory = 2048
 
   scsihw = "virtio-scsi-single"
-
-  efidisk {
-    efitype = "4m"
-    storage = "local-lvm"
-  }
 
   disks {
     scsi {
       scsi0 {
         disk {
-          size = 30
-          storage = "local-lvm"
+          size = 50
+          storage = var.PRX_STORAGE_NAME
         }
       }
     }

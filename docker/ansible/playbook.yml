@@ -64,3 +64,4 @@
       ansible.builtin.user:
         name: daniel
         groups: docker
+        append: true
