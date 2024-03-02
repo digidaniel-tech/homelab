@@ -25,3 +25,5 @@ jobs:
         run: ansible-playbook -i ${{ secrets.DOCKER_HOST_IP }}, playbook.yml
         env:
           ANSIBLE_HOST_KEY_CHECKING: false
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          INTERNAL_DNS_DOMAIN: ${{ secrets.INTERNAL_DNS_DOMAIN }}
