@@ -20,9 +20,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /home/daniel/services/traefik/traefik.yml:/traefik.yml:ro
-      - /home/daniel/services/traefik/acme.json:/acme.json
-      - /home/daniel/services/traefik/config.yml:/config.yml:ro
+      - ./config/traefik.yml:/traefik.yml:ro
+      - ./config/acme.json:/acme.json
+      - ./config/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
