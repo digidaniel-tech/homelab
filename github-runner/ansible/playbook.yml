@@ -19,6 +19,7 @@
         - curl
         - jq
         - unzip
+        - ansible # This is needed for some ansible scripts that is run by the worker
 
     - name: Create directory for runner
       become: true
