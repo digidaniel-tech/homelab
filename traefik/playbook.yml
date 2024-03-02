@@ -17,8 +17,8 @@
         mode: "0755"
       vars:
         api_key: "{{ lookup('env', 'CLOUDFLARE_API_KEY') }}"
-        private_host: "{{ lookup('env', 'EXTERNAL_DNS_DOMAIN') }}"
-        public_host: "{{ lookup('env', 'INTERNAL_DNS_DOMAIN') }}"
+        private_host: "{{ lookup('env', 'INTERNAL_DNS_DOMAIN') }}"
+        public_host: "{{ lookup('env', 'EXTERNAL_DNS_DOMAIN') }}"
 
     - name: Add config files
       ansible.builtin.template:
@@ -29,8 +29,8 @@
         - config/config.yml
         - config/traefik.yml
       vars:
-        private_host: "{{ lookup('env', 'EXTERNAL_DNS_DOMAIN') }}"
-        public_host: "{{ lookup('env', 'INTERNAL_DNS_DOMAIN') }}"
+        private_host: "{{ lookup('env', 'INTERNAL_DNS_DOMAIN') }}"
+        public_host: "{{ lookup('env', 'EXTERNAL_DNS_DOMAIN') }}"
 
     - name: Set permission for acme.json
       ansible.builtin.copy:
