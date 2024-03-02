@@ -41,6 +41,6 @@
 
     - name: Recreate containers
       ansible.builtin.command: |
-        docker compose -f {{ ansible_env.HOME }}/services/traefik/docker-compose.yml up -d
+        docker compose -f {{ ansible_env.HOME }}/services/traefik/docker-compose.yml up -d --force-recreate
       register: docker_compose
       changed_when: docker_compose != 0
