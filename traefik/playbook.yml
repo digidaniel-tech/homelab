@@ -38,6 +38,7 @@
         dest: "{{ ansible_env.HOME }}/services/traefik/config/acme.json"
         mode: "0600"
         remote_src: false
+        force: false
 
     - name: Recreate containers
       ansible.builtin.command: |

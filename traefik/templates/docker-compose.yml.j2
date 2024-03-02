@@ -36,10 +36,12 @@ services:
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
       - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main={{ private_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{{ private_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[1].main=s3.{{ public_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.s3.{{ public_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main={{ public_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{{ public_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].main={{ private_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.{{ private_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[2].main=s3.{{ public_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[2].sans=*.s3.{{ public_host }}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
 
 networks:
