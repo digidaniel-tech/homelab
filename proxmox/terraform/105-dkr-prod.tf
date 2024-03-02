@@ -1,7 +1,6 @@
 resource "proxmox_vm_qemu" "_105_dkr_prod_resource" {
   count = 1
-
-  # vmid = 100
+  
   name = "Docker"
   desc = "Docker instance to run containers from"
   agent = 1

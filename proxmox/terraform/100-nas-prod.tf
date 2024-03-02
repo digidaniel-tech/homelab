@@ -1,7 +1,6 @@
 resource "proxmox_vm_qemu" "_100_nas_prod_resource" {
   count = 1
 
-  # vmid = 100
   name = "Truenas"
   desc = "Handles network storage"
   agent = 1
