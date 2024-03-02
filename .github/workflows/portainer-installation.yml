@@ -1,0 +1,27 @@
+name: Install/Update Portainer
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'portainer/*.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: portainer
+
+jobs:
+  install-portainer:
+    name: "Install/Update portainer"
+    runs-on: "self-hosted"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run ansible playbook
+        run: ansible-playbook -i ${{ secrets.DOCKER_HOST_IP }}, playbook.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: false
