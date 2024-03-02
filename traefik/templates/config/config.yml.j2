@@ -57,6 +57,15 @@ http:
         - https-redirectscheme
       tls: {}
       service: s3
+    portainer:
+      entryPoints:
+        - "https"
+      rule: "Host(`portainer.{{ private_host }}`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: portainer
     # rancher:
     #   entryPoints:
     #     - "https"
@@ -99,6 +108,11 @@ http:
       loadBalancer:
         servers:
           - url: "http://192.168.50.107:9000/"
+        passHostHeader: true
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.50.29:9443/"
         passHostHeader: true
     # rancher:
     #   loadBalancer:
