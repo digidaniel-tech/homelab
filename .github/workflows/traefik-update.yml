@@ -1,0 +1,31 @@
+name: Update traefik configuration
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'traefik/**/*.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: traefik
+
+jobs:
+  update-files:
+    name: "Fetch latest configurations"
+    runs-on: "self-hosted"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+  
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Run ansible playbook
+        run: ansible-playbook -i ${{ secrets.DOCKER_HOST_IP }}, playbook.yml
