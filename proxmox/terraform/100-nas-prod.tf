@@ -3,7 +3,7 @@ resource "proxmox_vm_qemu" "_100_nas_prod_resource" {
 
   # vmid = 100
   name = "Truenas"
-  desc = "Responsible to run github workflows locally"
+  desc = "Handles network storage"
   agent = 1
   tags = "nas"
   bios = "ovmf"
