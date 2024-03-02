@@ -2,6 +2,10 @@ name: Update traefik configuration
 
 on:
   push:
+    branches: 
+      - main
+    paths:
+      - 'traefik/**/*.yml'
   workflow_dispatch:
 
 defaults:
@@ -19,8 +23,6 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
   
       - name: Install Ansible
         run: pip install ansible
