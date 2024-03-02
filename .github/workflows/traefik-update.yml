@@ -21,13 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11.2'
-  
-      - name: Install Ansible
-        run: pip install ansible
-
       - name: Run ansible playbook
         run: ansible-playbook -i ${{ secrets.DOCKER_HOST_IP }}, playbook.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: false
