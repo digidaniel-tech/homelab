@@ -23,3 +23,5 @@ jobs:
 
       - name: Run ansible playbook
         run: ansible-playbook -i ${{ secrets.DOCKER_HOST_IP }}, playbook.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: false
