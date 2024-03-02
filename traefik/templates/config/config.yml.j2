@@ -4,7 +4,7 @@ http:
     proxmox:
       entryPoints:
         - "https"
-      rule: "Host(`proxmox.{{ host }}`)"
+      rule: "Host(`proxmox.{{ private_host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -13,7 +13,7 @@ http:
     pihole:
       entryPoints:
         - "https"
-      rule: "Host(`pihole.{{ host }}`)"
+      rule: "Host(`pihole.{{ private_host }}`)"
       middlewares:
         - redirectregex-pihole
         - default-headers
@@ -24,7 +24,7 @@ http:
     truenas:
       entryPoints:
         - "https"
-      rule: "Host(`nas.{{ host }}`)"
+      rule: "Host(`nas.{{ private_host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -33,7 +33,7 @@ http:
     # plex:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`plex.{{ host }}`)"
+    #   rule: "Host(`plex.{{ private_host }}`)"
     #   middlewares:
     #     - default-headers
     #     - https-redirectscheme
@@ -42,7 +42,7 @@ http:
     minio:
       entryPoints:
         - "https"
-      rule: "Host(`minio.{{ host }}`)"
+      rule: "Host(`minio.{{ private_host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -51,7 +51,7 @@ http:
     s3:
       entryPoints:
         - "https"
-      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.{{ host }}`) || Host(`s3.{{ host }}`)"
+      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.{{ public_host }}`) || Host(`s3.{{ public_host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -60,7 +60,7 @@ http:
     # rancher:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`rancher.{{ host }}`)"
+    #   rule: "Host(`rancher.{{ private_host }}`)"
     #   middlewares:
     #     - default-headers
     #     - https-redirectscheme
@@ -83,7 +83,7 @@ http:
     truenas:
       loadBalancer:
         servers:
-          - url: "https://192.168.50.82"
+          - url: "https://192.168.50.107"
         passHostHeader: true
     # plex:
     #   loadBalancer:
@@ -93,12 +93,12 @@ http:
     minio:
       loadBalancer:
         servers:
-          - url: "http://192.168.50.82:9002/"
+          - url: "http://192.168.50.107:9002/"
         passHostHeader: true
     s3:
       loadBalancer:
         servers:
-          - url: "http://192.168.50.82:9000/"
+          - url: "http://192.168.50.107:9000/"
         passHostHeader: true
     # rancher:
     #   loadBalancer:

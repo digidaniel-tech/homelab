@@ -28,3 +28,4 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: false
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
           INTERNAL_DNS_DOMAIN: ${{ secrets.INTERNAL_DNS_DOMAIN }}
+          EXTERNAL_DNS_DOMAIN: ${{ secrets.EXTERNAL_DNS_DOMAIN }}
