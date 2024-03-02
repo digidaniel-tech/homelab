@@ -66,6 +66,15 @@ http:
         - https-redirectscheme
       tls: {}
       service: portainer
+    homepage:
+      entryPoints:
+        - "https"
+      rule: "Host(`homepage.{{ private_host }}`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: homepage
     # rancher:
     #   entryPoints:
     #     - "https"
@@ -113,6 +122,11 @@ http:
       loadBalancer:
         servers:
           - url: "https://192.168.50.29:9443/"
+        passHostHeader: true
+    homepage:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.50.29:3000/"
         passHostHeader: true
     # rancher:
     #   loadBalancer:
