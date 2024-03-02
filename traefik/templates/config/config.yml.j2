@@ -4,7 +4,7 @@ http:
     proxmox:
       entryPoints:
         - "https"
-      rule: "Host(`proxmox.home.wollbro.se`)"
+      rule: "Host(`proxmox.{{ host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -13,7 +13,7 @@ http:
     pihole:
       entryPoints:
         - "https"
-      rule: "Host(`pihole.home.wollbro.se`)"
+      rule: "Host(`pihole.{{ host }}`)"
       middlewares:
         - redirectregex-pihole
         - default-headers
@@ -24,7 +24,7 @@ http:
     truenas:
       entryPoints:
         - "https"
-      rule: "Host(`nas.home.wollbro.se`)"
+      rule: "Host(`nas.{{ host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -33,7 +33,7 @@ http:
     # plex:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`plex.home.wollbro.se`)"
+    #   rule: "Host(`plex.{{ host }}`)"
     #   middlewares:
     #     - default-headers
     #     - https-redirectscheme
@@ -42,7 +42,7 @@ http:
     minio:
       entryPoints:
         - "https"
-      rule: "Host(`minio.home.wollbro.se`)"
+      rule: "Host(`minio.{{ host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -51,7 +51,7 @@ http:
     s3:
       entryPoints:
         - "https"
-      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.home.wollbro.se`) || Host(`s3.home.wollbro.se`)"
+      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.{{ host }}`) || Host(`s3.{{ host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -60,7 +60,7 @@ http:
     # rancher:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`rancher.home.wollbro.se`)"
+    #   rule: "Host(`rancher.{{ host }}`)"
     #   middlewares:
     #     - default-headers
     #     - https-redirectscheme
