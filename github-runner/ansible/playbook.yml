@@ -74,6 +74,22 @@
       args:
         chdir: /opt/github-runner
 
+    - name: Add PPA to system
+      become: true
+      ansible.builtin.command: |
+        "curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -"
+      register: ppa_added
+      changed_when: ppa_added != 0
+
+    - name: Install nodejs
+      become: true
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      loop:
+        - nodejs
+
   vars_prompt:
     - name: github_repository_url
       prompt: "GitHub Repository URL (e.g., https://github.com/yourusername/yourrepository)"
