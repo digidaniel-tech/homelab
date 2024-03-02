@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'traefik/**/*.yml'
+      - 'traefik/**/*.yml.j2'
   workflow_dispatch:
 
 defaults:
