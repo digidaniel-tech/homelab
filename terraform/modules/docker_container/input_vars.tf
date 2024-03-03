@@ -64,6 +64,7 @@ variable "network_configurations" {
   type = list(object({
     name = string
   }))
+  default = []
 }
 
 variable "copy_files" {
