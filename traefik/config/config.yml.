@@ -4,7 +4,7 @@ http:
     proxmox:
       entryPoints:
         - "https"
-      rule: "Host(`proxmox.{{ private_host }}`)"
+      rule: "Host(`proxmox.home.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -13,7 +13,7 @@ http:
     pihole:
       entryPoints:
         - "https"
-      rule: "Host(`pihole.{{ private_host }}`)"
+      rule: "Host(`pihole.home.wollbro.se`)"
       middlewares:
         - redirectregex-pihole
         - default-headers
@@ -24,7 +24,7 @@ http:
     truenas:
       entryPoints:
         - "https"
-      rule: "Host(`nas.{{ private_host }}`)"
+      rule: "Host(`nas.home.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -33,7 +33,7 @@ http:
     # plex:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`plex.{{ private_host }}`)"
+    #   rule: "Host(`plex.home.wollbro.se`)"
     #   middlewares:
     #     - default-headers
     #     - https-redirectscheme
@@ -42,7 +42,7 @@ http:
     minio:
       entryPoints:
         - "https"
-      rule: "Host(`minio.{{ private_host }}`)"
+      rule: "Host(`minio.home.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -51,7 +51,7 @@ http:
     s3:
       entryPoints:
         - "https"
-      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.{{ public_host }}`) || Host(`s3.{{ public_host }}`)"
+      rule: "HostRegexp(`{subdomain:[a-z0-9_-]+}.s3.wollbro.se`) || Host(`s3.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -60,7 +60,7 @@ http:
     portainer:
       entryPoints:
         - "https"
-      rule: "Host(`portainer.{{ private_host }}`)"
+      rule: "Host(`portainer.home.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -69,7 +69,7 @@ http:
     homepage:
       entryPoints:
         - "https"
-      rule: "Host(`{{ private_host }}`)"
+      rule: "Host(`home.wollbro.se`)"
       middlewares:
         - default-headers
         - https-redirectscheme
@@ -78,7 +78,7 @@ http:
     # rancher:
     #   entryPoints:
     #     - "https"
-    #   rule: "Host(`rancher.{{ private_host }}`)"
+    #   rule: "Host(`rancher.home.wollbro.se`)"
     #   middlewares:
     #     - default-headers
     #     - https-redirectscheme
