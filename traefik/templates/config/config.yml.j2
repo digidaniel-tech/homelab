@@ -69,7 +69,7 @@ http:
     homepage:
       entryPoints:
         - "https"
-      rule: "Host(`homepage.{{ private_host }}`)"
+      rule: "Host(`{{ private_host }}`)"
       middlewares:
         - default-headers
         - https-redirectscheme
