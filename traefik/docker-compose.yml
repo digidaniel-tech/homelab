@@ -13,7 +13,7 @@ services:
       - 80:80
       - 443:443
     environment:
-      - CF_DNS_API_TOKEN={{ api_key }}
+      - CF_DNS_API_TOKEN=${CLOUDFLARE_API_KEY}
       # If you choose to use an API Key instead of a Token, specify your email as well
       # - CF_API_EMAIL=user@example.com
       # - CF_API_KEY=YOUR_API_KEY
@@ -21,28 +21,30 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./config/traefik.yml:/traefik.yml:ro
-      - ./config/acme.json:/acme.json
       - ./config/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=Host(`traefik-dashboard.{{ private_host }}`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik-dashboard.home.wollbro.se`)"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$05$$IfOD7nSBWLlx14WNNDUN6eAfda.GaMF9/EdvqbfcVhGCuJ3ddEilS"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik-dashboard.{{ private_host }}`)"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik-dashboard.home.wollbro.se`)"
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
       - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main={{ public_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{{ public_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[1].main={{ private_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.{{ private_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[2].main=s3.{{ public_host }}"
-      - "traefik.http.routers.traefik-secure.tls.domains[2].sans=*.s3.{{ public_host }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=wollbro.se"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.wollbro.se"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].main=home.wollbro.se"
+      - "traefik.http.routers.traefik-secure.tls.domains[1].sans=*.home.wollbro.se"
+      - "traefik.http.routers.traefik-secure.tls.domains[2].main=s3.wollbro.se"
+      - "traefik.http.routers.traefik-secure.tls.domains[2].sans=*.s3.wollbro.se"
       - "traefik.http.routers.traefik-secure.service=api@internal"
+
+volumes:
+  traefik-acme:
 
 networks:
   proxy:
