@@ -93,6 +93,10 @@ module "docker_container" {
     "traefik.http.routers.traefik-secure.tls.domains[1].sans" = "*.s3.wollbro.se"
     "traefik.http.routers.traefik-secure.service" = "api@internal"
   }
+
+  container_commands = [
+    "traefik"
+  ]
 }
 
 module "docker_network" {
