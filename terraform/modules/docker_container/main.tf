@@ -39,10 +39,6 @@ resource "docker_container" "container" {
     }
   }
 
-  networks_advanced {
-    name = "proxy"
-  }
-
   dynamic "labels" {
     for_each = var.label_mappings
 
