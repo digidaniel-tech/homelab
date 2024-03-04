@@ -1,0 +1,25 @@
+---
+- name: Install core for vm
+  hosts: all
+  gather_facts: false
+  remote_user: daniel
+
+  tasks:
+    - name: Install dependencies
+      become: true
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        update_cache: true
+        state: present
+      loop:
+        - vim
+        - prometheus-node-exporter
+        - nfs-common
+        - qemu-guest-agent
+        - unzip
+
+    - name: Start guest qemu-guest-agent
+      ansible.builtin.service:
+        name: qemu-guest-agent
+        state: started
+        enabled: true
