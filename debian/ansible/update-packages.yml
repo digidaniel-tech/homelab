@@ -1,0 +1,36 @@
+---
+- name: Update packages
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    # Loads variables from .env file
+    - name: Load environment variables
+      ansible.builtin.include_vars:
+        file: .env
+
+    # Upgrades apt packages
+    - name: Update apt packages
+      become: true
+      ansible.builtin.apt:
+        update_cache: "yes"
+        upgrade: "yes"
+
+    # Check if reboot is required
+    - name: Check if system reboot is required
+      become: true
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    # Send Discord message when reboot is required
+    - name: Send Discord message
+      ansible.builtin.uri:
+        url: "{{ DISCORD_WEBHOOK_URL }}"
+        method: POST
+        body_format: json
+        body: '{"content": "Reboot required on {{ inventory_hostname }}"}'
+        headers:
+          Content-Type: application/json
+        status_code: 204
+      when: reboot_required.stat.exists
