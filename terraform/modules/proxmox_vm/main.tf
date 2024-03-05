@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    proxmox = {
+      source = "telmate/proxmox"
+      version = "3.0.1-rc1"
+    }
+  }
+}
+
 resource "proxmox_vm_qemu" "proxmox_vm_module" {
   count = var.vm_count
 
