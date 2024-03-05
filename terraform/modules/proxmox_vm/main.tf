@@ -6,7 +6,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_module" {
   desc = var.vm_desc
   agent = 1
   tags = var.vm_tags
-  bios = "ovmf"
+  bios = var.vm_bios
   machine = "q35"
 
   qemu_os = "l26"
@@ -24,9 +24,13 @@ resource "proxmox_vm_qemu" "proxmox_vm_module" {
 
   scsihw = "virtio-scsi-single"
 
-  efidisk {
-    efitype = "4m"
-    storage = "local-lvm"
+  dynamic "efidisk" {
+    for_each = var.vm_bios == "ovmf" ? [1] : []
+
+    content {
+      efitype = "4m"
+      storage = var.vm_disk_storage
+    }
   }
 
   disks {

@@ -26,6 +26,12 @@ variable "vm_tags" {
   type = string
 }
 
+variable "vm_bios" {
+  description = "The bios the VM will run on"
+  type = string
+  default = "seabios"
+}
+
 variable "vm_iso" {
   description = "The ISO that the VM should run"
   type = string
