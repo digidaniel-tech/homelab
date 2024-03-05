@@ -1,54 +1,14 @@
-resource "proxmox_vm_qemu" "_100_nas_prod_resource" {
-  count = 1
+module "_100_nas_prod_resource" {
+  source = "../../terraform/modules/proxmox_vm"
 
-  name = "Truenas"
-  desc = "Handles network storage"
-  agent = 1
-  tags = "nas"
-  bios = "ovmf"
-  machine = "q35"
+  vm_id = 1000
+  vm_name = "Truenas"
+  vm_desc = "Handles network storage"
+  vm_tags = "nas"
+  vm_iso = "local:iso/TrueNAS-SCALE-23.10.1.3.iso"
+  vm_host = var.PRX_HOST
+  vm_bios = "ovmf"
 
-  qemu_os = "l26"
-  iso = "local:iso/TrueNAS-SCALE-23.10.1.3.iso"
-  target_node = var.PRX_HOST
-
-  full_clone = false
-
-  onboot = true
-  automatic_reboot = false
-
-  sockets = 1
-  cores = 2
-  memory = 6144
-
-  scsihw = "virtio-scsi-single"
-
-  efidisk {
-    efitype = "4m"
-    storage = "local-lvm"
-  }
-
-  disks {
-    scsi {
-      scsi0 {
-        disk {
-          size = 30
-          storage = "local-lvm"
-        }
-      }
-    }
-  }
-  
-  network {
-    model = "virtio"
-    bridge = "vmbr0"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      disks,
-      vm_state,
-      network,
-    ]
-  }
+  vm_ram = 6144
+  vm_disk_size = 30
 }
