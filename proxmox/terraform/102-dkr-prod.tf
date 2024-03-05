@@ -1,9 +1,9 @@
-module "_1002_dkr_prod_resource" {
+module "_102_dkr_prod_resource" {
   source = "../../terraform/modules/proxmox_vm"
 
   vm_name = "Docker"
   vm_desc = "Docker instance to run containers from"
-  vm_tags = "docker, proxy"
+  vm_tags = "docker;proxy"
 
   vm_iso = "local:iso/debian-12-unattended.iso"
   vm_host = var.PRX_HOST
