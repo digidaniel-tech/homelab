@@ -4,7 +4,7 @@ resource "proxmox_vm_qemu" "_105_dkr_prod_resource" {
   name = "Docker"
   desc = "Docker instance to run containers from"
   agent = 1
-  tags = "docker, proxy"
+  tags = "docker;proxy"
   bios = "seabios"
   machine = "pc"
 

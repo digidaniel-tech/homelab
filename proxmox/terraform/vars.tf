@@ -21,8 +21,11 @@ variable "PRX_STORAGE_NAME" {
 
 variable "ssh_default_password" {
   type = string
+  default = ""
+  sensitive = true
 }
 
 variable "ssh_pub_key" {
   type = string
+  default = ""
 }
