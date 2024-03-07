@@ -40,4 +40,10 @@ module "homepage_docker_container" {
       source = "${ local.root_path }/settings.yml"
     }
   ]
+
+  network_configurations = [
+    {
+      name = "proxy"
+    }
+  ]
 }
