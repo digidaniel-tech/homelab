@@ -1,0 +1,57 @@
+---
+- name: Mount SMB Share
+  hosts: all
+  remote_user: daniel
+  gather_facts: false
+
+  vars:
+    smb_credentials_target: "/root/.smbcredentials"
+
+  vars_prompt:
+    - name: username
+      prompt: "Enter SMB username"
+      private: false
+
+    - name: password
+      prompt: "Enter SMB password"
+      private: true
+
+    - name: smb_share
+      prompt: "Enter path to SMB share"
+      private: false
+
+    - name: mount_point
+      prompt: "Enter path to mount to"
+      private: false
+
+  tasks:
+    - name: Setup packages
+      become: true
+      ansible.builtin.apt:
+        name: cifs-utils
+        state: present
+
+    - name: Create mount point
+      become: true
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: "0755"
+
+    - name: Create credentials file
+      become: true
+      ansible.builtin.template:
+        src: "smbcredentials.j2"
+        dest: "{{ smb_credentials_target }}"
+        mode: "0600"
+        remote_src: false
+
+    - name: Mount SMB share
+      become: true
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        src: "{{ smb_share }}"
+        fstype: cifs
+        boot: false
+        opts: "vers=3.0,credentials={{ smb_credentials_target }},uid=1000,gid=1000,noauto,x-systemd.automount"
+        state: mounted

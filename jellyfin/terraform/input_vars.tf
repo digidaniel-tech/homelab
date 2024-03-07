@@ -1,9 +1,3 @@
-variable "CLOUDFLARE_API_KEY" {
-  description = "The API key for Cloudflare"
-  type = string
-  sensitive = true
-}
-
 variable "SSH_USER" {
   description = "The SSH user that is used to connect to docker vm"
   type = string

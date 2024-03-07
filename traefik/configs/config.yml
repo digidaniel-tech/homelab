@@ -30,15 +30,15 @@ http:
         - https-redirectscheme
       tls: {}
       service: truenas
-    # plex:
-    #   entryPoints:
-    #     - "https"
-    #   rule: "Host(`plex.home.wollbro.se`)"
-    #   middlewares:
-    #     - default-headers
-    #     - https-redirectscheme
-    #   tls: {}
-    #   service: plex
+    jellyfin:
+      entryPoints:
+        - "https"
+      rule: "Host(`media.wollbro.se`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: jellyfin
     minio:
       entryPoints:
         - "https"
@@ -103,11 +103,11 @@ http:
         servers:
           - url: "https://192.168.50.107"
         passHostHeader: true
-    # plex:
-    #   loadBalancer:
-    #     servers:
-    #       - url: "https://192.168.50.105:32400"
-    #     passHostHeader: true
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.50.29:8096"
+        passHostHeader: true
     minio:
       loadBalancer:
         servers:
