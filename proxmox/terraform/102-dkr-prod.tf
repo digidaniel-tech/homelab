@@ -8,6 +8,8 @@ module "_102_dkr_prod_resource" {
   vm_iso = "local:iso/debian-12-unattended.iso"
   vm_host = var.PRX_HOST
 
+  vm_ram = 4096
+
   vm_disk_size = 50
   vm_disk_storage = var.PRX_STORAGE_NAME
 
