@@ -5,8 +5,8 @@ Welcome friend,
 I am Daniel also called Wolkan, I am a full fledged nerd who works as a
 developer at day and becomes a DevOps, OP wannabe at night.
 
-This repository is my homelab in code, here I will keep all IaC scripts, ansible
-playbooks and much more that I have used to setup my homelab. This is both for
+This repository is my Homelab in code, here I will keep all IaC scripts, ansible
+playbooks and much more that I have used to setup my Homelab. This is both for
 my own documentation but also to help and inspire others that want to do the
 same.
 
@@ -22,24 +22,24 @@ same.
 
 ## Background
 
-I setup my own homelab in 2019 and have reinstalled it multiple times and every
+I setup my own Homelab in 2019 and have reinstalled it multiple times and every
 time I had to figure out the same problems over and over again because I never
-documentet the work I had done, this change now!
+documented the work I had done, this change now!
 
 > [!TIP]
 > I recommend you to do the same right now, you don't have to make it public
 > if you dont want to but for your own sake I would start documenting your
 > work as now righ away to save yourself som headache down the road.
 
-Because this is a homelab and not an production environment I often reinstall
+Because this is a Homelab and not an production environment I often reinstall
 the server to test new operation systems, other configurations or just fixing
 a problem I have caused that I was not able to solve.. (Yeah I also take the
 quick way out sometime)
 
 ## My Homelab
 
-My homelab is running Proxmox VE, I have run Proxmox pretty much since I decided to
-setup my homelab and I love it!
+My Homelab is running Proxmox VE, I have run Proxmox pretty much since I decided to
+setup my Homelab and I love it!
 
 > [!NOTE]
 > I hope to be able to setup more servers with Proxmox so I can experiment with
@@ -118,9 +118,9 @@ will increase my experiance using each feature.
 
 ### Why have you not done X, Y or Z?
 
-I am not an export in this area, when started this project my entire setup was
+I am not an expert in this area, when started this project my entire setup was
 done manually by hand without any automation or tools, so it was actually when
-I found out about terraform I decided to migrate my entire homelab setup into
+I found out about terraform I decided to migrate my entire Homelab setup into
 code so I could learn more about Terraform and other tools, and gain more 
 knowledge from more of a real life case then from just following another
 tutorial, and man I can say it has been an experiance.
