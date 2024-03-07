@@ -87,19 +87,16 @@ module "docker_container" {
     "traefik.http.routers.traefik-secure.middlewares" = "traefik-auth"
     "traefik.http.routers.traefik-secure.tls" = "true"
     "traefik.http.routers.traefik-secure.tls.certresolver" = "cloudflare"
-    "traefik.http.routers.traefik-secure.tls.domains[0].main" = "home.wollbro.se"
-    "traefik.http.routers.traefik-secure.tls.domains[0].sans" = "*.home.wollbro.se"
-    "traefik.http.routers.traefik-secure.tls.domains[1].main" = "s3.wollbro.se"
-    "traefik.http.routers.traefik-secure.tls.domains[1].sans" = "*.s3.wollbro.se"
+    "traefik.http.routers.traefik-secure.tls.domains[0].main" = "wollbro.se"
+    "traefik.http.routers.traefik-secure.tls.domains[0].sans" = "*.wollbro.se"
+    "traefik.http.routers.traefik-secure.tls.domains[1].main" = "home.wollbro.se"
+    "traefik.http.routers.traefik-secure.tls.domains[1].sans" = "*.home.wollbro.se"
+    "traefik.http.routers.traefik-secure.tls.domains[2].main" = "s3.wollbro.se"
+    "traefik.http.routers.traefik-secure.tls.domains[2].sans" = "*.s3.wollbro.se"
     "traefik.http.routers.traefik-secure.service" = "api@internal"
   }
 
   container_commands = [
     "traefik"
   ]
-}
-
-module "docker_network" {
-  source = "../terraform/modules/docker_network"
-  network_name = "proxy"
 }

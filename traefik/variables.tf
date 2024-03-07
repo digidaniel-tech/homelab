@@ -1,6 +1,7 @@
 variable "CLOUDFLARE_API_KEY" {
   description = "The API key for Cloudflare"
   type = string
+  sensitive = true
 }
 
 variable "SSH_USER" {
