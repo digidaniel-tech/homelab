@@ -1,6 +1,6 @@
 ---
 - name: Setup GitHub Actions Runner
-  hosts: targets
+  hosts: all
   gather_facts: false
   remote_user: daniel
 
