@@ -12,7 +12,7 @@ module "jellyfin_container" {
   source = "../../terraform/modules/docker_container"
 
   container_name = "jellyfin"
-  container_image = "jellyfin/jellyfin:2024030405"
+  container_image = "jellyfin/jellyfin:2024040805"
 
   container_env = [
     "JELLYFIN_PublishedServerUrl=https://media.wollbro.se"
@@ -22,6 +22,10 @@ module "jellyfin_container" {
     {
       internal = 8096
       external = 8096
+    },
+    {
+      internal = 8920
+      external = 8920
     }
   ]
 
