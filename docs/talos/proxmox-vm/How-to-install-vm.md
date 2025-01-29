@@ -1,25 +1,38 @@
 # How to install Talos on a VM in Proxmox with Secure Boot
 
-!! This document is still in progress and should not considered as a source of truth. Expect misspellings and miss information!
+In this document I will guide you to how to setup an minimal Talos Cluster in Proxmox with Secure Boot and TPM for increased security.
 
-## Prequisis
+> [!WARNING]
+> During writing this guide the latest version of Talos is v1.9 so it is a good idea to make sure you change URL's to use the newest version.
 
-First of all I expect you to have an running Proxmox, I will not get into that here.
+## Prerequisites
 
-Then we need two tools to work with Talos.
+To following a long with this guide there is some prerequisites, I will list them below.
+
+### Proxmox
+
+First of all I expect you to have an running Proxmox, I will not go over that in this guide.
+If interested I can add a guide for that, let me know!
+
+To work with Talos we need two tools, talosctl and kubectl.
+
+### Kubernetes knowledge
+
+In this guide I will not go over how K8s (Kubernetes) work and how to use it, so I expect you to have some knowledge of how to use it or at least knows what it is.
 
 ### Talosctl
 
-Talosctl is the main tool used to communicate with talos nodes and that can be installed in difference ways depending on OS,
+Talosctl is the main tool used to communicate with the Talos nodes, it can be installed in difference ways depending on what OS you are running,
 I link the official guide blow for you to set it up.
 
-[Install talosctl](https://www.talos.dev/v1.9/talos-guides/install/talosctl/)
+[How to install talosctl](https://www.talos.dev/v1.9/talos-guides/install/talosctl/)
 
-Then we also should install kubectl so we can communicate with K8s (Kubernetes).
+### Kubectl
+
+Then we also should install kubectl so we can communicate with K8s.
 I link the official guide to how to install that here.
 
-[Install kubectl](https://kubernetes.io/docs/tasks/tools/)
-
+[How to install kubectl](https://kubernetes.io/docs/tasks/tools/)
 
 ## Fetch ISO and upload to Proxmox
 
@@ -28,17 +41,17 @@ I link the official guide to how to install that here.
 The easiest way to fetch the ISO is to go to [Talos Linux Image Factory](https://factory.talos.dev/) and follow the guide specific to
 what you want the ISO to include, just remember to select to use SecureBoot because this guide is about how to install using that.
 
-Then I then to use Qemu agent so when you get to where you can select System Extensions scoll down until you see siderolabs/qemu-guest-agent and tick the checkbox for that,
+Then I tend to use Qemu agent so when you get to where you can select System Extensions scoll down until you see `siderolabs/qemu-guest-agent` and tick the checkbox to include that,
 this is not required but might give some performance improvements and quality of life improvements.
 
-Every thing else you can leave untouched.
+Everything else you can leave untouched.
 
 Lastly you will come to the page with the link to the ISO, copy this url for now.
 
 ### Upload to Proxmox
 
 Now that you have the URL you can go to your storage where you store ISO's (local for default) and select ISO Images then "Download from URL" and paste in the URL you retrived previously.
-Next click Download.
+Next click Download and it will get downloaded directly to Proxmox without having to first download it locally and then upload it to Proxmox separately.
 
 Wait for the download to complete and then we are ready to move forward.
 
