@@ -57,53 +57,107 @@ Wait for the download to complete and then we are ready to move forward.
 
 ## Setup VM in Proxmox
 
+In this guide we will install a minimum cluster of Talos, so we will only install one Control Plane and one Worker node, but the instructions works as well if you want to setup an HA cluster.
+
 ### Control Plane node
 
-I begin with creating a new VM in Proxmox by clicking the "Create VM" button at the top right.
-On the first view make sure you have the "Advanced" checkbook ticked if you are following along what I do.
+We begin with creating a new VM in Proxmox by clicking the "Create VM" button at the top right.
+On the first view make sure you have the "Advanced" checkbox ticked if you are following along what I do, so you can see all the options.
 
-First I enter the name "talos-control" because this will be the node for the control plane.
-I also tick the box for "Start on boot" so that the VM is started on boot.
-I usually adds tags when adding VM's that works togheter so for this I add a tag with "K8s" to show that the VM is related to Kubernetes.
-Everything I left as is.
+#### General
 
-Under OS we select the ISO image we uploaded previously and click next.
+First I enter the name "talos-cp-1" to describe that it is an Talos Control Plane we are setting up and 1 in the end is just incase we want to add more later on.
 
-When configuring the system I select the q35 as the machine type this is not strictly needed but will give some benefits for modern OS's.
-I set OVMF (UEFI) as BIOS this is needed for secure boot, also selects where the EFI disk should be stored.
+The "Start on boot" checkbox is good to set so that the VM is started on boot if the Proxmox service is restarting due to powerlost or similar.
 
-This is important!! Do not forget to untick the "Pre-Enroll keys" checkbox, this gave me a huge headacke first time setting up Talos on Proxmox,
-this checkbox is mostly used for when installing a Windows VM and if it is left tick it will pre load the system with keys that will prevent the
-system to load correct keys from the Talos installation media.
+I usually adds tags when adding VM's that works together to keep VM's organised, so for this VM I add the tag "K8s" to show that the VM is related to Kubernetes.
 
-As the SCSI Controller I set it as VirtIO SCSI (not single), this is not required by a good practice.
+Everything else I left as it is.
 
-I often use the Qemu Agent so it will runt better with Proxmox with shutdowns and showing the IP on the dashboard, so I tick in that box.
+#### OS
 
-The last thing I do is adding a TPM by ticking the checkbox for TPM and selecting where to store it, this is also not required by give a bit
-more security.
+Here we select the ISO image we uploaded previously.
 
-Next we setup the disk where Talos will be installed, the minimum requirement (while writing this) is 10GB but the recommended size is 100GB so I will enter 100GB.
-I will also tick the box for IO Thread, here as well it is not required but gives a bit more performance when reading and writing to disk.
+I leave Guest OS as default.
 
-Time to setup the CPU, the minimum requirement is 2 cores for the control-plane but the recommended is 4 cores so use as many as you can, I set it to 4.
-The rest I leave as default.
+#### System
 
-When it comes to memory here the recommended is 4GB (4096MB) but the minimum is 2GB (2048MB) so if you don't have a lot of memory then 2GB is alright.
+When configuring the system I select `q35` as the machine type this is not required but will give some benefits for modern OS's.
+
+As BIOS I set OVMF (UEFI) and this is needed for secure boot, I also selects where the EFI disk should be stored, an EFI disk is needed for UEFI to work.
+
+Untick the "Pre-Enroll keys" checkbox, Talos will set it's own keys and will not be able to load those if Proxmox pre-enroll keys.
+
+> [!CAUTION]
+> Do not forget to untick the "Pre-Enroll keys" checkbox, this gave me a huge headacke first time setting up Talos on Proxmox,
+> this checkbox is mostly used for when installing a Windows VM and if it is left tick it will pre load the system with keys that will prevent the
+> system to load correct keys from the Talos installation media.
+
+As the SCSI Controller I set it as VirtIO SCSI (not single), this is not required by a good practice. If using the one named single you lose the possible to use Multiqueue I/O where it enables so that multiple threads can works simultaneously.
+
+As mention before I often use the Qemu Agent so it will run better with Proxmox with shutdowns/restart calls, ballooning and showing the IP on the dashboard, so I tick in that box.
+
+The last thing I do here is to tick the TPM checkbox to add an TPM module and selecting where to store it's disk. It should also use TPM v2.0.
+
+#### Disks
+
+Next it is time to setup the disk where Talos will be installed, the minimum disk size for Talos Control Plane is 10GB but the recommended size is 100GB so I will enter 100GB here.
+
+I will also tick the box for IO Thread, it is not required but gives a bit more performance when reading and writing to disk.
+
+> [!NOTE]
+> You can read more about requirements here.
+> 
+> [System Requirements](https://www.talos.dev/v1.9/introduction/system-requirements/)
+
+The rest I leaves as default.
+
+#### CPU
+
+Time to setup the CPU, the minimum requirement is 2 cores for the control-plane but the recommended count is 4 cores so use as many as you can, I set it to 4.
+
+The rest here I leave as default.
+
+#### Memory
+
+When it comes to memory the recommended amount is 4GB (4096MB) but the minimum is 2GB (2048MB), so if you don't have a lot of memory then 2GB is alright.
+
 I also leave "Ballooning Device" ticked so it can share memory with other VM's.
+
+#### Network
 
 The network view I leave as default, but if you want to use a dedicated NIC or change any other settings feel free to to that.
 
-And then we are done and we can click the Finish button to create our VM.
+#### Confirm
+
+And then we are done, go over the settings and make sure everything looks good, if you want you can tick in the checkbox so that the VM starts when creation is done but it is not required.
+
+Now we can click the Finish button to create our VM.
 
 ### Worker node
 
-To setup the worker node I following the same guide as above but change the name to "talos-worker" or somehing similar.
-The worker node also doesn't need the same amount of resources, you can find the system requirement below.
+To setup the worker node I following the same guide as above but change the name to "talos-worker" or something similar.
 
-[System requirements](https://www.talos.dev/v1.9/introduction/system-requirements/)
+The worker node also doesn't need the same amount of resources.
 
-One the worker nodes is setup we can then start to actually install Talos on the VM's.
+#### Minimum
+
+| Memory | CPU     | Disk  |
+| ------ | ------- | ------|
+| 1GB    | 1 Cores | 10 GB |
+
+#### Recommended
+
+| Memory | CPU     | Disk   |
+| ------ | ------- | -------|
+| 2GB    | 2 Cores | 100 GB |
+
+> [!NOTE]
+> You can read more about requirements here.
+> 
+> [System Requirements](https://www.talos.dev/v1.9/introduction/system-requirements/)
+
+Once the worker node VM is created we can start to actually install the Talos cluster.
 
 ## Setup TPM configuration (You can skip this if you didn't add an TPM module)
 
