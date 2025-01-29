@@ -136,9 +136,9 @@ Now we can click the Finish button to create our VM.
 
 ### Worker node
 
-To setup the worker node I following the same guide as above but change the name to "talos-worker" or something similar.
+To setup the worker node I following the same guide as above but change the name to "talos-worker-1" or something similar.
 
-The worker node also doesn't need the same amount of resources.
+Also the worker node doesn't need the same amount of resources. To make it easier for you I list the minimum and recommended resources below.
 
 #### Minimum
 
