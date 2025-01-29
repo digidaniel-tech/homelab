@@ -299,8 +299,8 @@ Once that is done we run:
 talosctl bootstrap
 ```
 
-Now we can see that something is happening on our control plane console, and after waiting some more (might take a minute or two depending on how much resources the VM has) we can se that the ready state change to true and the control plane
-then is ready, and after about 1 minute we also can see that the worker node is ready, great job!
+Now we can see that something is happening on our control plane console, and after some waiting (this can take a minute or two) we can see that the ready state changed to true and the control plane
+then is ready, and after about one minute we also can see that the worker node is ready and we have an working Talos cluster, Great job!
 
 ## First use
 
