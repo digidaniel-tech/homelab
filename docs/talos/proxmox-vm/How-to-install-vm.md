@@ -159,10 +159,12 @@ Also the worker node doesn't need the same amount of resources. To make it easie
 
 Once the worker node VM is created we can start to actually install the Talos cluster.
 
-## Setup TPM configuration (You can skip this if you didn't add an TPM module)
+## Setup TPM configuration
 
-We start by creating a yaml file named tpm-disk-encryption.yaml this file will later be used to configure the disk that is used
-by tpm. Here we can see that it used luks for encrypting the disk.
+Before we can start installing our nodes we need to create an configuration file for TPM to tell it how the TPM module shoule be setup.
+
+Start by opening up your terminal and create a .yaml file called tpm-disk-encryption.yaml, this file will later be used to configure the disk that is used
+by tpm. In the file enter the content below with you favorite editor.
 
 ```yaml
 # tpm-disk-encryption.yaml
@@ -181,16 +183,19 @@ machine:
           tpm: {}
 ```
 
-
+Here we can see that it used luks for encrypting the disk where the TPM will store it's data.
 
 ## Setup the Control Plane node
 
-We first start with the control plane node, let's start it if it not already started then wait for it to get started and in maintainence state.
-Once we can confirm it is in maintainance state we can se our IP, note this down or even easier, add it as an environment variable like this.
+Time to setup our cluster, we start with the control plane node, if it is not already, start the VM and wait for it to get started and to it getting into maintainence state.
+
+Once it is in maintainance state we can se our IP in the top right corner, note that down or even easier, add it as an environment variable like this.
 
 `export CONTROL_PLANE_IP=1.2.3.4`
 
-Now from our terminal we write the following, don't worry I will explan what everything is:
+Replace 1.2.3.4 with the your IP.
+
+Now that we have our IP we enter the following in our terminal, don't worry I will explan what everything is:
 
 ```shell
 talosctl gen config talos-proxmox-cluster https://$CONTROL_PLANE_IP:6443 \
@@ -203,35 +208,35 @@ talosctl gen config talos-proxmox-cluster https://$CONTROL_PLANE_IP:6443 \
 So what is happening here?
 
 `talosctl get config`
-this is the command that will load the configuration for us from our control plane node.
+This is the command that will load the configuration for us from our control plane node.
 
 `talos-proxmox-cluster`
-this is the name of the cluster, we can change this to something else if we want.
+This is the name of the cluster, we can change this to something else if we want.
 
 `https://$CONTROL_PLANE_IP:6443`
-this is the url that talosctl will use to communicate with our node, note the $CONTROL_PLANE_IP this is the environment variable we added previously, so if you never added that then you need to replace this with the correct IP.
+This is the url that talosctl will use to communicate with our node, note the $CONTROL_PLANE_IP this is the environment variable we added previously, so if you never added that then you need to replace this with the correct IP.
 
 `--output-dir _out`
-Here we specify where the configuration files will be saved.
+Here we specify where the configuration files will be saved to, in this case in a directory called _out.
 
 `--install-image`
 This specify where to download the installation image, here it is important to make sure it is the secureboot installer, the installer will else install Talos but due to secure boot Talos won't boot after an restart.
 
 `--install-disk`
-as default Talos is installed to /dev/sda, so I added this configuration for you if you need to install it to another disk.
+As default Talos is installed to /dev/sda, so I added this configuration for you if you need to install it to another disk.
 
 `--config-path @tpm-disk-encryption.yaml`
-this is to setup the encryption for the TPM module, this is not required if you didn't install an TPM module.
+This is to setup the encryption for the TPM module, this is the file we created previously so make sure you are in the correct directory.
 
-After running this you will have an directory called _out in the folder where you run the command.
+After running this you will have an directory called `_out` that contains all configuration files that will be used to setup your cluster.
 
-Now that we have the configuration we can install Talos to our VM, this is done by running this command:
+Now that we have the configuration files we can setup our Talos Control Plane to our VM, this is done by running this command:
 
 ```shell
 talosctl apply-config --insecure --nodes $CONTROL_PLANE_IP --file _out/controlplane.yaml
 ```
 
-Okay so what is happening here?
+Let's break down the command to explain what it does:
 
 `talosctl apply-config`
 This is the command that we use to apply the configuration we generated previously and install Tanos to our control plane node.
@@ -243,11 +248,11 @@ Because Talos are using https to connect to our nodes we need to specify that we
 Here we specify what nodes we want to apply this configuration to, here we could add multiple nodes if we wanted to setup an HA cluster but that is out of scope for this guide.
 
 `--file`
-This specifies what configuration file to use when running the command here we can see that we are using an configuration file from the folder _out that we generated previously and it is also using the configuration for the controlplanes.
+This specifies what configuration file to use when running the command here we can see that we are using an configuration file from the directory `_out` that we generated previously and it is also using the configuration for setting up control planes.
 
 Now that we have run this command we can see in the console on Proxmox for the control plane VM that the state say's "Installing" once this is done it will get restarted.
 
-Once the VM has restarted and we are back in the console we can see that the state says "Booting", if we wait nothing changes and that is okay because there are still some things that needs to be done and we get to that soon.
+Once the VM has restarted and we are back in the console we can see that the state says `Booting`, if we keep wait nothing will change and that is okay because there are still some things that needs to be done and we get to that soon, so let's leave the control plane for now.
 
 ## Setup the worker node
 
