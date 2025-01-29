@@ -1,0 +1,250 @@
+# How to install Talos on a VM in Proxmox with Secure Boot
+
+!! This document is still in progress and should not considered as a source of truth. Expect misspellings and miss information!
+
+## Prequisis
+
+First of all I expect you to have an running Proxmox, I will not get into that here.
+
+Then we need two tools to work with Talos.
+
+### Talosctl
+
+Talosctl is the main tool used to communicate with talos nodes and that can be installed in difference ways depending on OS,
+I link the official guide blow for you to set it up.
+
+[Install talosctl](https://www.talos.dev/v1.9/talos-guides/install/talosctl/)
+
+Then we also should install kubectl so we can communicate with K8s (Kubernetes).
+I link the official guide to how to install that here.
+
+[Install kubectl](https://kubernetes.io/docs/tasks/tools/)
+
+
+## Fetch ISO and upload to Proxmox
+
+### Download ISO
+
+The easiest way to fetch the ISO is to go to [Talos Linux Image Factory](https://factory.talos.dev/) and follow the guide specific to
+what you want the ISO to include, just remember to select to use SecureBoot because this guide is about how to install using that.
+
+Then I then to use Qemu agent so when you get to where you can select System Extensions scoll down until you see siderolabs/qemu-guest-agent and tick the checkbox for that,
+this is not required but might give some performance improvements and quality of life improvements.
+
+Every thing else you can leave untouched.
+
+Lastly you will come to the page with the link to the ISO, copy this url for now.
+
+### Upload to Proxmox
+
+Now that you have the URL you can go to your storage where you store ISO's (local for default) and select ISO Images then "Download from URL" and paste in the URL you retrived previously.
+Next click Download.
+
+Wait for the download to complete and then we are ready to move forward.
+
+## Setup VM in Proxmox
+
+### Control Plane node
+
+I begin with creating a new VM in Proxmox by clicking the "Create VM" button at the top right.
+On the first view make sure you have the "Advanced" checkbook ticked if you are following along what I do.
+
+First I enter the name "talos-control" because this will be the node for the control plane.
+I also tick the box for "Start on boot" so that the VM is started on boot.
+I usually adds tags when adding VM's that works togheter so for this I add a tag with "K8s" to show that the VM is related to Kubernetes.
+Everything I left as is.
+
+Under OS we select the ISO image we uploaded previously and click next.
+
+When configuring the system I select the q35 as the machine type this is not strictly needed but will give some benefits for modern OS's.
+I set OVMF (UEFI) as BIOS this is needed for secure boot, also selects where the EFI disk should be stored.
+
+This is important!! Do not forget to untick the "Pre-Enroll keys" checkbox, this gave me a huge headacke first time setting up Talos on Proxmox,
+this checkbox is mostly used for when installing a Windows VM and if it is left tick it will pre load the system with keys that will prevent the
+system to load correct keys from the Talos installation media.
+
+As the SCSI Controller I set it as VirtIO SCSI (not single), this is not required by a good practice.
+
+I often use the Qemu Agent so it will runt better with Proxmox with shutdowns and showing the IP on the dashboard, so I tick in that box.
+
+The last thing I do is adding a TPM by ticking the checkbox for TPM and selecting where to store it, this is also not required by give a bit
+more security.
+
+Next we setup the disk where Talos will be installed, the minimum requirement (while writing this) is 10GB but the recommended size is 100GB so I will enter 100GB.
+I will also tick the box for IO Thread, here as well it is not required but gives a bit more performance when reading and writing to disk.
+
+Time to setup the CPU, the minimum requirement is 2 cores for the control-plane but the recommended is 4 cores so use as many as you can, I set it to 4.
+The rest I leave as default.
+
+When it comes to memory here the recommended is 4GB (4096MB) but the minimum is 2GB (2048MB) so if you don't have a lot of memory then 2GB is alright.
+I also leave "Ballooning Device" ticked so it can share memory with other VM's.
+
+The network view I leave as default, but if you want to use a dedicated NIC or change any other settings feel free to to that.
+
+And then we are done and we can click the Finish button to create our VM.
+
+### Worker node
+
+To setup the worker node I following the same guide as above but change the name to "talos-worker" or somehing similar.
+The worker node also doesn't need the same amount of resources, you can find the system requirement below.
+
+[System requirements](https://www.talos.dev/v1.9/introduction/system-requirements/)
+
+One the worker nodes is setup we can then start to actually install Talos on the VM's.
+
+## Setup TPM configuration (You can skip this if you didn't add an TPM module)
+
+We start by creating a yaml file named tpm-disk-encryption.yaml this file will later be used to configure the disk that is used
+by tpm. Here we can see that it used luks for encrypting the disk.
+
+```yaml
+# tpm-disk-encryption.yaml
+
+machine:
+  systemDiskEncryption:
+    ephemeral:
+      provider: luks2
+      keys:
+        - slot: 0
+          tpm: {}
+    state:
+      provider: luks2
+      keys:
+        - slot: 0
+          tpm: {}
+```
+
+
+
+## Setup the Control Plane node
+
+We first start with the control plane node, let's start it if it not already started then wait for it to get started and in maintainence state.
+Once we can confirm it is in maintainance state we can se our IP, note this down or even easier, add it as an environment variable like this.
+
+`export CONTROL_PLANE_IP=1.2.3.4`
+
+Now from our terminal we write the following, don't worry I will explan what everything is:
+
+```shell
+talosctl gen config talos-proxmox-cluster https://$CONTROL_PLANE_IP:6443 \
+    --output-dir _out \
+    --install-image factory.talos.dev/installer-secureboot/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba:v1.9.2 \
+    --install-disk=/dev/sda \
+    --config-patch @tpm-disk-encryption.yaml
+```
+
+So what is happening here?
+
+`talosctl get config`
+this is the command that will load the configuration for us from our control plane node.
+
+`talos-proxmox-cluster`
+this is the name of the cluster, we can change this to something else if we want.
+
+`https://$CONTROL_PLANE_IP:6443`
+this is the url that talosctl will use to communicate with our node, note the $CONTROL_PLANE_IP this is the environment variable we added previously, so if you never added that then you need to replace this with the correct IP.
+
+`--output-dir _out`
+Here we specify where the configuration files will be saved.
+
+`--install-image`
+This specify where to download the installation image, here it is important to make sure it is the secureboot installer, the installer will else install Talos but due to secure boot Talos won't boot after an restart.
+
+`--install-disk`
+as default Talos is installed to /dev/sda, so I added this configuration for you if you need to install it to another disk.
+
+`--config-path @tpm-disk-encryption.yaml`
+this is to setup the encryption for the TPM module, this is not required if you didn't install an TPM module.
+
+After running this you will have an directory called _out in the folder where you run the command.
+
+Now that we have the configuration we can install Talos to our VM, this is done by running this command:
+
+```shell
+talosctl apply-config --insecure --nodes $CONTROL_PLANE_IP --file _out/controlplane.yaml
+```
+
+Okay so what is happening here?
+
+`talosctl apply-config`
+This is the command that we use to apply the configuration we generated previously and install Tanos to our control plane node.
+
+`--insecure`
+Because Talos are using https to connect to our nodes we need to specify that we are allowing insecure connection due to us not setup SSL.
+
+`--nodes`
+Here we specify what nodes we want to apply this configuration to, here we could add multiple nodes if we wanted to setup an HA cluster but that is out of scope for this guide.
+
+`--file`
+This specifies what configuration file to use when running the command here we can see that we are using an configuration file from the folder _out that we generated previously and it is also using the configuration for the controlplanes.
+
+Now that we have run this command we can see in the console on Proxmox for the control plane VM that the state say's "Installing" once this is done it will get restarted.
+
+Once the VM has restarted and we are back in the console we can see that the state says "Booting", if we wait nothing changes and that is okay because there are still some things that needs to be done and we get to that soon.
+
+## Setup the worker node
+
+Now it is time to setup the worker node and this is even simpler, all we have to do once the VM has started and we can confirm the state on the console says "Maintainance" is to
+just as previously we store the IP for our worker in an environment variable to make our work easier.
+
+`export WORKER_NODE=1.2.3.4`
+
+Then we runt the command below to configure our worker node.
+
+```shell
+talosctl apply-config --insecure --nodes $WORKER_NODE --file _out/worker.yaml
+```
+
+This is the same command we used previously when applying the configuration to our control plane but with 2 difference let's go over down here.
+
+`--nodes`
+Instead of $CONTROL_PLANE_IP we now use the $WORKER_NODE_IP environment variable to make sure we are applying the config to our worker node instead.
+
+`--file`
+Here we are now using the worker.yaml instead of the controlplane.yaml that we used before, this is to make sure we apply the worker configuration to our worker and not the control plane configuration.
+
+After running this command we once again can see that the state say's "Installing" and when that is done the VM will be restarted.
+
+When the VM has been restarted and we are back at the console, we have to wait a while until the stage says "Running".
+
+Now we can confirm that the worker is running, but both the control plane and the worker is saying that it is not ready? Let's fix that now!
+
+## Last step
+
+So now when the nodes are configured it is time for us to setup some last configuration.
+
+First we run the following command to setup the endpoint and node configuration for the control plane:
+
+```shell
+export TALOSCONFIG="_out/talosconfig"
+talosctl config endpoint $CONTROL_PLANE_IP
+talosctl config node $CONTROL_PLANE_IP
+```
+
+Once that is done we run:
+```shell
+talosctl bootstrap
+```
+
+Now we can see that something is happening on our control plane console, and after waiting some more (might take a minute or two depending on how much resources the VM has) we can se that the ready state change to true and the control plane
+then is ready, and after about 1 minute we also can see that the worker node is ready, great!
+
+## First use
+
+Now that the nodes is configured and running, how should we then use it?
+We start by fetching the configuration for kubectl by running the command below:
+
+```shell
+talosctl kubeconfig .
+```
+
+Now we have a file called kubeconfig and this can either be move to the default directory that is `$HOME/.kube` for Linux or we can use it directly in a kubectl command like this.
+
+```shell
+kubectl --kubeconfig kubeconfig get nodes
+```
+
+And by running that command we now can see our running nodes and Talos is ready to be used to run different services.
+
+Good job!
+
