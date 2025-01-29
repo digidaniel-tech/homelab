@@ -259,21 +259,21 @@ Once the VM has restarted and we are back in the console we can see that the sta
 Now it is time to setup the worker node and this is even simpler, all we have to do once the VM has started and we can confirm the state on the console says "Maintainance" is to
 just as previously we store the IP for our worker in an environment variable to make our work easier.
 
-`export WORKER_NODE=1.2.3.4`
+`export WORKER_IP=1.2.3.4`
 
 Then we runt the command below to configure our worker node.
 
 ```shell
-talosctl apply-config --insecure --nodes $WORKER_NODE --file _out/worker.yaml
+talosctl apply-config --insecure --nodes $WORKER_IP --file _out/worker.yaml
 ```
 
-This is the same command we used previously when applying the configuration to our control plane but with 2 difference let's go over down here.
+This is the same command we used previously when applying the configuration on our control plane but with two difference, let's go over them down here.
 
 `--nodes`
-Instead of $CONTROL_PLANE_IP we now use the $WORKER_NODE_IP environment variable to make sure we are applying the config to our worker node instead.
+Instead of $CONTROL_PLANE_IP we now use the $WORKER_IP environment variable to make sure we are applying the config to our worker node instead of our control plane.
 
 `--file`
-Here we are now using the worker.yaml instead of the controlplane.yaml that we used before, this is to make sure we apply the worker configuration to our worker and not the control plane configuration.
+Here we are now using the `worker.yaml` instead of the `controlplane.yaml` that we used before, this is to make sure we apply the worker configuration to our worker and not the control plane configuration.
 
 After running this command we once again can see that the state say's "Installing" and when that is done the VM will be restarted.
 
@@ -294,12 +294,13 @@ talosctl config node $CONTROL_PLANE_IP
 ```
 
 Once that is done we run:
+
 ```shell
 talosctl bootstrap
 ```
 
 Now we can see that something is happening on our control plane console, and after waiting some more (might take a minute or two depending on how much resources the VM has) we can se that the ready state change to true and the control plane
-then is ready, and after about 1 minute we also can see that the worker node is ready, great!
+then is ready, and after about 1 minute we also can see that the worker node is ready, great job!
 
 ## First use
 
