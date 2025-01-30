@@ -281,11 +281,11 @@ When the VM has been restarted and we are back at the console, we have to wait a
 
 Now we can confirm that the worker is running, but both the control plane and the worker is saying that it is not ready? Let's fix that now!
 
-## Last step
+## Configure talosctl to communicate with our cluster
 
 So now when the nodes are configured it is time for us to setup some last configuration.
 
-First we run the following command to setup the endpoint and node configuration for the control plane:
+To make things easier we run the following command to setup the endpoint and node configuration on talosctl so it knows how to communicate with our newly created Talos cluster, this is done by running the following command.
 
 ```shell
 export TALOSCONFIG="_out/talosconfig"
@@ -293,11 +293,17 @@ talosctl config endpoint $CONTROL_PLANE_IP
 talosctl config node $CONTROL_PLANE_IP
 ```
 
-Once that is done we run:
+Now that the tool knows what endpoint and node to communicate with we can make our last configuration.
+
+## Bootstraping our Talos cluster
+
+The last thing we need to do is to boostrap Talos, this is done to create an `etcd` cluster and setup all the Kubernetes components needed to start using our cluster.
 
 ```shell
 talosctl bootstrap
 ```
+> [!NOTE]
+> This should only be run once towards a single control plane, so if you have multiple control planes then only run it agains one of the control planes, the rest will automatically be updated.
 
 Now we can see that something is happening on our control plane console, and after some waiting (this can take a minute or two) we can see that the ready state changed to true and the control plane
 then is ready, and after about one minute we also can see that the worker node is ready and we have an working Talos cluster, Great job!
@@ -317,7 +323,4 @@ Now we have a file called kubeconfig and this can either be move to the default 
 kubectl --kubeconfig kubeconfig get nodes
 ```
 
-And by running that command we now can see our running nodes and Talos is ready to be used to run different services.
-
-Good job!
-
+And by running that command we now can see our running nodes and Talos is ready to be used to run different services, so the only thing left to do is to start setting up your workload and you are ready to rock, Good job!
