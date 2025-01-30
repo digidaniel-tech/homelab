@@ -1,24 +1,31 @@
-# Wolkan's `Homelab`
+# My `Homelab`
+
+> [!WARNING]
+> This repo has fallen behind and have not updated it in a while but I have now
+> decided that it will be my "source-of-truth", think of GitOps, so everything
+> except secrets will be commited here and then mirrored towards my Homelab.
+>
+> So expect a lot of changes in the near future!
 
 Welcome friend,
 
-I am Daniel also called Wolkan, I am a full fledged nerd who works as a
-developer at day and becomes a DevOps, OP wannabe at night.
+I am Daniel, I am a full fledged nerd who loves to works with
+everything from servers, network to code and automation.
 
-This repository is my Homelab in code, here I will keep all IaC scripts, ansible
-playbooks and much more that I have used to setup my Homelab. This is both for
+I am a strong advocate for GitOps and using automations as much as possible,
+to be clear, not everything should be automated but everything that can remove
+waste (waste as an wasted time) should be automated as long as it is secure.
+
+This repository is my Homelab in code, this repo is an repetentation on what I am
+running in my Homelab and how my Homelab is currently configured. This is both for
 my own documentation but also to help and inspire others that want to do the
 same.
 
 > [!IMPORTANT]
-> Some applications will change overtime so it is a good idea to go read through
-> each script and gain an understanding of what is does, and change things like
-> versions and also look to see after deprication notices.
-
-> [!NOTE]
-> Currently I am only updating this repo with the work I am doing, but I am
-> planning to start making YouTube videos of each project I do togheter with
-> a blog post so that I can teach others what I have learned.
+> Things will change and I am always trying out new things, so I have another repo
+> called homelab-archive where I move everything that I am no longer using but have
+> been running, so if there is something that you have seen here but doesn't exists
+> anymore then check in that repo, it should be there.
 
 ## Background
 
