@@ -90,7 +90,11 @@ budget allows.
 
 #### Current situation
 
+![Image of the current network infrastructure](https://github.com/digidaniel-dev/homelab/blob/update-readme/assets/network-2025.png?raw=true)
+
 #### Current goal
+
+![Image of the planed network infrastructure](https://github.com/digidaniel-dev/homelab/blob/update-readme/assets/network-2025-plans.png?raw=true)
 
 ### NAS
 
