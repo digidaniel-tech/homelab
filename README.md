@@ -1,4 +1,4 @@
-# My `Homelab`
+# Welcome to my `Homelab`
 
 > [!WARNING]
 > This repo has fallen behind and have not updated it in a while but I have now
@@ -14,18 +14,19 @@ everything from servers, network to code and automation.
 
 I am a strong advocate for GitOps and using automations as much as possible,
 to be clear, not everything should be automated but everything that can remove
-waste (waste as an wasted time) should be automated as long as it is secure.
+waste (waste as time that is spent on repetetive tasks) should be automated as 
+long as it is secure.
 
-This repository is my Homelab in code, this repo is an repetentation on what I am
-running in my Homelab and how my Homelab is currently configured. This is both for
-my own documentation but also to help and inspire others that want to do the
-same.
+This repository is my Homelab in code, this repo is an repetentation on what I
+am running in my Homelab and how my Homelab is currently configured. This is 
+both for my own documentation but also to help and inspire others that want to 
+do the same.
 
 > [!IMPORTANT]
-> Things will change and I am always trying out new things, so I have another repo
-> called homelab-archive where I move everything that I am no longer using but have
-> been running, so if there is something that you have seen here but doesn't exists
-> anymore then check in that repo, it should be there.
+> Things will change and I am always trying out new things, so I have another
+> repo called homelab-archive where I move everything that I am no longer using
+> but have been running, so if there is something that you have seen here but
+> doesn't exists anymore then check in that repo, it should be there.
 
 ## Background
 
@@ -45,8 +46,8 @@ quick way out sometime)
 
 ## My Homelab
 
-My Homelab is running Proxmox VE, I have run Proxmox pretty much since I decided to
-setup my Homelab and I love it!
+My Homelab is running Proxmox VE, I have run Proxmox pretty much since I
+decided to setup my Homelab and I love it!
 
 > [!NOTE]
 > I hope to be able to setup more servers with Proxmox so I can experiment with
@@ -78,70 +79,34 @@ that Proxmox has to offer.
 > digging into this project and Proxmox has a great community behind it with
 > people that are really helpful and knowledgeable.
 
-## The Project
+## Hardware
 
-### Folder structure
+### Network Infrastructure
 
-I have built the structure in a way so I can easily find what I am searching for
-so first level is the project or application I am interested in, the second 
-level is the tools I have been using to setup the project/application for
-instance Terraform, Ansible or maybe Docker compose file.
+I try to setup my network infrastructure as what an business would setup so
+that I can learn the more advanced functionality that comes with professional
+equitment, this is an ongoing process and I will keep updating it when my
+budget allows.
 
-In the last folders I have all the scripts that is used to setup each instance
-that I am or had run so it will be easy to set them up again if needed.
+#### Current situation
 
-### Terraform
+#### Current goal
 
-I use Terraform to setup infrastucture in different forms like VM's in Proxmox,
-containers in Docker, and so on.
+### NAS
 
-Terraform (TF) is a really easy tool to use and something that I quickly fell
-in love with, some of the TF scripts in this project might seem over-engineered
-by this is because I wanted to learn more about each feature that TF has to
-offer and I then tried to use them all as often as possible.
+### Virtualization Server
 
-### Ansible
+## Services
 
-Ansible is also used, mostly to run different tasks in each VM to make it easy
-and quick to get everything to going.
+### NAS
 
-Ansible was something that gave me a bit of a bad taste when started using but
-once getting in to it and gained knowledge about it I not think it is a really
-good and easy tool to use and is something I will continue using in my future
-projects.
+### Virtualization Server
 
-### Docker
-
-I love containerization and am trying to use it as much as possible and that is
-why I am using Docker, it is also kind of a standard to day in IT so using it
-will increase my experiance using each feature.
-
-## Random Questions
-
-> [!NOTE]
-> I am trying to add questions that people might have while reading this repo
-> here, but if you have any questions please feel free to reach out to me and
-> I will try to answear dom as soon as I can.
-
-### Why have you not done X, Y or Z?
-
-I am not an expert in this area, when started this project my entire setup was
-done manually by hand without any automation or tools, so it was actually when
-I found out about terraform I decided to migrate my entire Homelab setup into
-code so I could learn more about Terraform and other tools, and gain more 
-knowledge from more of a real life case then from just following another
-tutorial, and man I can say it has been an experiance.
-
-### Some projects/applications looks out of date
-
-Yes as times go I will try different applications and projects and might replace
-stuff I have run before for something else that I liked, but as this is
-documentation and history for me there will exists things that is outdated so
-I can go back and check how I did something if I ever want to set it up again.
+## Future Plans
 
 ## Contribute
 
-Even if this is my own Homelab and I won't accept contribution dont heasitate to
-create a PR if there is something I could have done differently or if there is
-something that looks really wrong, I am still learning and all help is
-appreciated.
+Even if this is my own Homelab and I won't accept contribution but don't
+heasitate to create a PR if there is something I could have done differently or
+if there is something that looks really wrong, I am still learning and all help
+is appreciated.
